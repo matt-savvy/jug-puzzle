@@ -89,9 +89,8 @@ initialModel =
 
 
 type Msg
-    = FillGallon5
+    = Fill Jug
     | EmptyGallon5
-    | FillGallon3
     | EmptyGallon3
     | Pour Jug Jug
 
@@ -103,8 +102,8 @@ view model =
         , div []
             [ h2 [] [ text ("3 gallon jug " ++ String.fromInt (getJug Gallon3 model.jugs)) ]
             , h2 [] [ text ("5 gallon jug " ++ String.fromInt (getJug Gallon5 model.jugs)) ]
-            , button [ onClick FillGallon3 ] [ text "fill 3 gallon jug" ]
-            , button [ onClick FillGallon5 ] [ text "fill 5 gallon jug" ]
+            , button [ onClick (Fill Gallon3) ] [ text "fill 3 gallon jug" ]
+            , button [ onClick (Fill Gallon5) ] [ text "fill 5 gallon jug" ]
             , button [ onClick EmptyGallon3 ] [ text "empty 3 gallon jug" ]
             , button [ onClick EmptyGallon5 ] [ text "empty 5 gallon jug" ]
             , button [ onClick (Pour Gallon3 Gallon5) ] [ text "pour 3 gallon into 5 gallon" ]
@@ -116,11 +115,8 @@ view model =
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        FillGallon5 ->
-            { model | jugs = updateJug Gallon5 5 model.jugs }
-
-        FillGallon3 ->
-            { model | jugs = updateJug Gallon3 3 model.jugs }
+        Fill jug ->
+            { model | jugs = updateJug jug (getMax jug) model.jugs }
 
         EmptyGallon5 ->
             { model | jugs = updateJug Gallon5 0 model.jugs }
