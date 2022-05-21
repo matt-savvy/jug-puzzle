@@ -1,4 +1,4 @@
-module Jugs exposing (Jug(..), Jugs, getJug, main)
+module Jugs exposing (Jug(..), Jugs, getJug, main, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, text)
@@ -29,6 +29,16 @@ getJug jug jugs =
 
         Gallon5 ->
             Tuple.second (Tuple.second jugs)
+
+
+updateJug : Jug -> Int -> Jugs -> Jugs
+updateJug jug newValue jugs =
+    case jug of
+        Gallon3 ->
+            ( ( Gallon3, newValue ), Tuple.second jugs )
+
+        Gallon5 ->
+            ( Tuple.first jugs, ( Gallon5, newValue ) )
 
 
 type alias Model =
