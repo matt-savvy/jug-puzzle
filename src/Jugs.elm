@@ -98,7 +98,7 @@ type Msg
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [] [ text "nice jugs" ]
+        [ h1 [] [ text "measure 4 gallons exactly" ]
         , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model.jugs
             , div [ id "pour-buttons" ]
