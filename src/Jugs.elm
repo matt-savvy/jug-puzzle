@@ -1,7 +1,7 @@
 module Jugs exposing (Jug(..), Jugs, getJug, getMax, main, pour, updateJug)
 
 import Browser
-import Html exposing (Html, button, div, h1, h2, text)
+import Html exposing (Html, button, div, h1, h2, p, text)
 import Html.Events exposing (onClick)
 
 
@@ -99,15 +99,22 @@ view model =
     div []
         [ h1 [] [ text "nice jugs" ]
         , div []
-            [ h2 [] [ text ("3 gallon jug " ++ String.fromInt (getJug Gallon3 model.jugs)) ]
-            , h2 [] [ text ("5 gallon jug " ++ String.fromInt (getJug Gallon5 model.jugs)) ]
-            , button [ onClick (Fill Gallon3) ] [ text "fill 3 gallon jug" ]
-            , button [ onClick (Fill Gallon5) ] [ text "fill 5 gallon jug" ]
-            , button [ onClick (Empty Gallon3) ] [ text "empty 3 gallon jug" ]
-            , button [ onClick (Empty Gallon5) ] [ text "empty 5 gallon jug" ]
-            , button [ onClick (Pour Gallon3 Gallon5) ] [ text "pour 3 gallon into 5 gallon" ]
-            , button [ onClick (Pour Gallon5 Gallon3) ] [ text "pour 5 gallon into 3 gallon" ]
+            [ viewJug Gallon3 "3 gallon jug" model.jugs
+            , viewJug Gallon5 "5 gallon jug" model.jugs
+            , p []
+                [ button [ onClick (Pour Gallon3 Gallon5) ] [ text "pour 3 gallon into 5 gallon" ]
+                , button [ onClick (Pour Gallon5 Gallon3) ] [ text "pour 5 gallon into 3 gallon" ]
+                ]
             ]
+        ]
+
+
+viewJug : Jug -> String -> Jugs -> Html Msg
+viewJug jug jugLabel jugs =
+    div []
+        [ h2 [] [ text (jugLabel ++ ": " ++ String.fromInt (getJug jug jugs)) ]
+        , button [ onClick (Fill jug) ] [ text ("fill " ++ jugLabel) ]
+        , button [ onClick (Empty jug) ] [ text ("empty " ++ jugLabel) ]
         ]
 
 
