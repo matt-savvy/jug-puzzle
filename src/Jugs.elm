@@ -93,8 +93,7 @@ type Msg
     | EmptyGallon5
     | FillGallon3
     | EmptyGallon3
-    | Pour3To5
-    | Pour5To3
+    | Pour Jug Jug
 
 
 view : Model -> Html Msg
@@ -108,8 +107,8 @@ view model =
             , button [ onClick FillGallon5 ] [ text "fill 5 gallon jug" ]
             , button [ onClick EmptyGallon3 ] [ text "empty 3 gallon jug" ]
             , button [ onClick EmptyGallon5 ] [ text "empty 5 gallon jug" ]
-            , button [ onClick Pour3To5 ] [ text "pour 3 gallon into 5 gallon" ]
-            , button [ onClick Pour5To3 ] [ text "pour 5 gallon into 3 gallon" ]
+            , button [ onClick (Pour Gallon3 Gallon5) ] [ text "pour 3 gallon into 5 gallon" ]
+            , button [ onClick (Pour Gallon5 Gallon3) ] [ text "pour 5 gallon into 3 gallon" ]
             ]
         ]
 
@@ -129,11 +128,8 @@ update msg model =
         EmptyGallon3 ->
             { model | jugs = updateJug Gallon3 0 model.jugs }
 
-        Pour3To5 ->
-            { model | jugs = pour Gallon3 Gallon5 model.jugs }
-
-        Pour5To3 ->
-            { model | jugs = pour Gallon5 Gallon3 model.jugs }
+        Pour source target ->
+            { model | jugs = pour source target model.jugs }
 
 
 main =
