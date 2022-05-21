@@ -40,16 +40,6 @@ updateJugTests =
         ]
 
 
-getMax : Jug -> Int
-getMax jug =
-    case jug of
-        Gallon3 ->
-            3
-
-        Gallon5 ->
-            5
-
-
 testGetMax3 : Test
 testGetMax3 =
     test "Gallon3 should have a max of 3" <|
@@ -60,3 +50,24 @@ testGetMax5 : Test
 testGetMax5 =
     test "Gallon5 should have a max of 5" <|
         \_ -> Expect.equal (getMax Gallon5) 5
+
+
+pourTests : Test
+pourTests =
+    describe "test pour"
+        -- pouring from 3 to 5
+        [ pourTest "pour Gallon3 3 -> Gallon5 0 should return 0, 3" Gallon3 Gallon5 ( ( Gallon3, 3 ), ( Gallon5, 0 ) ) ( ( Gallon3, 0 ), ( Gallon5, 3 ) )
+        , pourTest "pour Gallon3 3 -> Gallon5 4 should return 2, 5" Gallon3 Gallon5 ( ( Gallon3, 3 ), ( Gallon5, 4 ) ) ( ( Gallon3, 2 ), ( Gallon5, 5 ) )
+        , pourTest "pour Gallon3 3 -> Gallon5 5 should return 3, 5" Gallon3 Gallon5 ( ( Gallon3, 3 ), ( Gallon5, 5 ) ) ( ( Gallon3, 3 ), ( Gallon5, 5 ) )
+
+        -- pouring from 5 to 3
+        , pourTest "pour Gallon3 0 <- Gallon5 5 should return 3, 2" Gallon5 Gallon3 ( ( Gallon3, 0 ), ( Gallon5, 5 ) ) ( ( Gallon3, 3 ), ( Gallon5, 2 ) )
+        , pourTest "pour Gallon3 2 <- Gallon5 5 should return 3, 4" Gallon5 Gallon3 ( ( Gallon3, 2 ), ( Gallon5, 5 ) ) ( ( Gallon3, 3 ), ( Gallon5, 4 ) )
+        , pourTest "pour Gallon3 3 <- Gallon5 2 should return 3, 2" Gallon5 Gallon3 ( ( Gallon3, 3 ), ( Gallon5, 2 ) ) ( ( Gallon3, 3 ), ( Gallon5, 2 ) )
+        ]
+
+
+pourTest : String -> Jug -> Jug -> Jugs -> Jugs -> Test
+pourTest description source target jugs expectedResult =
+    test description <|
+        \_ -> Expect.equal (pour source target jugs) expectedResult

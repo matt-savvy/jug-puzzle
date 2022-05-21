@@ -1,4 +1,4 @@
-module Jugs exposing (Jug(..), Jugs, getJug, main, updateJug)
+module Jugs exposing (Jug(..), Jugs, getJug, getMax, main, pour, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, text)
@@ -39,6 +39,40 @@ updateJug jug newValue jugs =
 
         Gallon5 ->
             ( Tuple.first jugs, ( Gallon5, newValue ) )
+
+
+getMax : Jug -> Int
+getMax jug =
+    case jug of
+        Gallon3 ->
+            3
+
+        Gallon5 ->
+            5
+
+
+pour : Jug -> Jug -> Jugs -> Jugs
+pour source target jugs =
+    let
+        spaceLeft =
+            getMax target - getJug target jugs
+
+        amountToPour =
+            min spaceLeft (getJug source jugs)
+    in
+    case ( source, target ) of
+        ( Gallon3, Gallon5 ) ->
+            ( ( Gallon3, getJug Gallon3 jugs - amountToPour )
+            , ( Gallon5, getJug Gallon5 jugs + amountToPour )
+            )
+
+        ( Gallon5, Gallon3 ) ->
+            ( ( Gallon3, getJug Gallon3 jugs + amountToPour )
+            , ( Gallon5, getJug Gallon5 jugs - amountToPour )
+            )
+
+        _ ->
+            jugs
 
 
 type alias Model =
