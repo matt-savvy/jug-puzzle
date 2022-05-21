@@ -2,6 +2,7 @@ module Jugs exposing (Jug(..), Jugs, getJug, getMax, main, pour, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, p, text)
+import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
 
 
@@ -98,11 +99,11 @@ view : Model -> Html Msg
 view model =
     div []
         [ h1 [] [ text "nice jugs" ]
-        , div []
+        , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model.jugs
-            , div []
-                [ viewPourButton Gallon3 Gallon5 "Pour 3 gallon into 5 gallon"
-                , viewPourButton Gallon5 Gallon3 "Pour 5 gallon into 3 gallon"
+            , div [ id "pour-buttons" ]
+                [ viewPourButton Gallon3 Gallon5 " >> "
+                , viewPourButton Gallon5 Gallon3 " << "
                 ]
             , viewJug Gallon5 "5 gallon jug" model.jugs
             ]
@@ -111,10 +112,10 @@ view model =
 
 viewJug : Jug -> String -> Jugs -> Html Msg
 viewJug jug jugLabel jugs =
-    div []
+    div [ class "jug" ]
         [ h2 [] [ text (jugLabel ++ ": " ++ String.fromInt (getJug jug jugs)) ]
-        , button [ onClick (Fill jug) ] [ text ("fill " ++ jugLabel) ]
-        , button [ onClick (Empty jug) ] [ text ("empty " ++ jugLabel) ]
+        , button [ onClick (Fill jug) ] [ text "fill" ]
+        , button [ onClick (Empty jug) ] [ text "empty" ]
         ]
 
 
@@ -123,22 +124,24 @@ viewPourButton source target description =
     div [] [ button [ onClick (Pour source target) ] [ text description ] ]
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Fill jug ->
-            { model | jugs = updateJug jug (getMax jug) model.jugs }
+            ( { model | jugs = updateJug jug (getMax jug) model.jugs }, Cmd.none )
 
         Empty jug ->
-            { model | jugs = updateJug jug 0 model.jugs }
+            ( { model | jugs = updateJug jug 0 model.jugs }, Cmd.none )
 
         Pour source target ->
-            { model | jugs = pour source target model.jugs }
+            ( { model | jugs = pour source target model.jugs }, Cmd.none )
 
 
+main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = initialModel
+    Browser.element
+        { init = \_ -> ( initialModel, Cmd.none )
         , update = update
+        , subscriptions = \_ -> Sub.none
         , view = view
         }

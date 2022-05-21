@@ -1,0 +1,22 @@
+body {
+    margin-left: 200px;
+    margin-right: 200px;
+    margin-top: 50px;
+}
+
+button {
+    margin: 4px;
+}
+
+#jugs {
+    display: flex;
+}
+
+.jug {
+    margin: 0 100px;
+}
+
+#pour-buttons {
+    align-self: center;
+}
+
