@@ -100,11 +100,11 @@ view model =
         [ h1 [] [ text "nice jugs" ]
         , div []
             [ viewJug Gallon3 "3 gallon jug" model.jugs
-            , viewJug Gallon5 "5 gallon jug" model.jugs
-            , p []
-                [ button [ onClick (Pour Gallon3 Gallon5) ] [ text "pour 3 gallon into 5 gallon" ]
-                , button [ onClick (Pour Gallon5 Gallon3) ] [ text "pour 5 gallon into 3 gallon" ]
+            , div []
+                [ viewPourButton Gallon3 Gallon5 "Pour 3 gallon into 5 gallon"
+                , viewPourButton Gallon5 Gallon3 "Pour 5 gallon into 3 gallon"
                 ]
+            , viewJug Gallon5 "5 gallon jug" model.jugs
             ]
         ]
 
@@ -116,6 +116,11 @@ viewJug jug jugLabel jugs =
         , button [ onClick (Fill jug) ] [ text ("fill " ++ jugLabel) ]
         , button [ onClick (Empty jug) ] [ text ("empty " ++ jugLabel) ]
         ]
+
+
+viewPourButton : Jug -> Jug -> String -> Html Msg
+viewPourButton source target description =
+    div [] [ button [ onClick (Pour source target) ] [ text description ] ]
 
 
 update : Msg -> Model -> Model
