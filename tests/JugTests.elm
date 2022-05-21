@@ -38,3 +38,25 @@ updateJugTests =
         [ updateJugTest "update Gallon3 should update Gallon3" Gallon3 2 initJugs ( ( Gallon3, 2 ), ( Gallon5, 5 ) )
         , updateJugTest "update Gallon5 should update Gallon5" Gallon5 4 initJugs ( ( Gallon3, 3 ), ( Gallon5, 4 ) )
         ]
+
+
+getMax : Jug -> Int
+getMax jug =
+    case jug of
+        Gallon3 ->
+            3
+
+        Gallon5 ->
+            5
+
+
+testGetMax3 : Test
+testGetMax3 =
+    test "Gallon3 should have a max of 3" <|
+        \_ -> Expect.equal (getMax Gallon3) 3
+
+
+testGetMax5 : Test
+testGetMax5 =
+    test "Gallon5 should have a max of 5" <|
+        \_ -> Expect.equal (getMax Gallon5) 5
