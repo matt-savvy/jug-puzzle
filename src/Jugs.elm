@@ -29,13 +29,6 @@ createJugs volume3gallon volume5gallon =
     ( ( Gallon3, volume3gallon ), ( Gallon5, volume5gallon ) )
 
 
-initJugs : Jugs
-initJugs =
-    ( ( Gallon3, 3 )
-    , ( Gallon5, 5 )
-    )
-
-
 getJug : Jug -> Jugs -> Int
 getJug jug jugs =
     case jug of
@@ -106,10 +99,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { jugs =
-        ( ( Gallon3, 0 )
-        , ( Gallon5, 0 )
-        )
+    { jugs = createJugs 0 0
     }
 
 
