@@ -43,13 +43,13 @@ updateJugTests =
 testGetMax3 : Test
 testGetMax3 =
     test "Gallon3 should have a max of 3" <|
-        \_ -> Expect.equal (getMax Gallon3) 3
+        \_ -> Expect.equal (getCapacity Gallon3) 3
 
 
 testGetMax5 : Test
 testGetMax5 =
     test "Gallon5 should have a max of 5" <|
-        \_ -> Expect.equal (getMax Gallon5) 5
+        \_ -> Expect.equal (getCapacity Gallon5) 5
 
 
 pourTests : Test

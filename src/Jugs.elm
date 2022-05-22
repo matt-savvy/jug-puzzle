@@ -1,4 +1,4 @@
-module Jugs exposing (Jug(..), Jugs, getJug, getMax, main, pour, updateJug)
+module Jugs exposing (Jug(..), Jugs, getJug, getCapacity, main, pour, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, p, text)
@@ -42,8 +42,8 @@ updateJug jug newValue jugs =
             ( Tuple.first jugs, ( Gallon5, newValue ) )
 
 
-getMax : Jug -> Int
-getMax jug =
+getCapacity : Jug -> Int
+getCapacity jug =
     case jug of
         Gallon3 ->
             3
@@ -56,7 +56,7 @@ pour : Jug -> Jug -> Jugs -> Jugs
 pour source target jugs =
     let
         spaceLeft =
-            getMax target - getJug target jugs
+            getCapacity target - getJug target jugs
 
         amountToPour =
             min spaceLeft (getJug source jugs)
@@ -128,7 +128,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Fill jug ->
-            ( { model | jugs = updateJug jug (getMax jug) model.jugs }, Cmd.none )
+            ( { model | jugs = updateJug jug (getCapacity jug) model.jugs }, Cmd.none )
 
         Empty jug ->
             ( { model | jugs = updateJug jug 0 model.jugs }, Cmd.none )
