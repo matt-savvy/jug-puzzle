@@ -5,8 +5,8 @@ import Jugs exposing (..)
 import Test exposing (..)
 
 
-initJugs : Jugs
-initJugs =
+initJugsFull : Jugs
+initJugsFull =
     ( ( Gallon3, 3 )
     , ( Gallon5, 5 )
     )
@@ -21,8 +21,8 @@ getJugTest description jug jugs expectedValue =
 getJugsTests : Test
 getJugsTests =
     describe "test getJug"
-        [ getJugTest "getJug Gallon3 should return the val for gallon 3" Gallon3 initJugs 3
-        , getJugTest "getJug Gallon5 should return the val for gallon 5" Gallon5 initJugs 5
+        [ getJugTest "getJug Gallon3 should return the val for gallon 3" Gallon3 initJugsFull 3
+        , getJugTest "getJug Gallon5 should return the val for gallon 5" Gallon5 initJugsFull 5
         ]
 
 
@@ -35,8 +35,8 @@ updateJugTest description jug newValue jugs expectedJugs =
 updateJugTests : Test
 updateJugTests =
     describe "test updateJug"
-        [ updateJugTest "update Gallon3 should update Gallon3" Gallon3 2 initJugs ( ( Gallon3, 2 ), ( Gallon5, 5 ) )
-        , updateJugTest "update Gallon5 should update Gallon5" Gallon5 4 initJugs ( ( Gallon3, 3 ), ( Gallon5, 4 ) )
+        [ updateJugTest "update Gallon3 should update Gallon3" Gallon3 2 initJugsFull ( ( Gallon3, 2 ), ( Gallon5, 5 ) )
+        , updateJugTest "update Gallon5 should update Gallon5" Gallon5 4 initJugsFull ( ( Gallon3, 3 ), ( Gallon5, 4 ) )
         ]
 
 
@@ -76,6 +76,6 @@ pourTest description source target jugs expectedResult =
 emptyJugTests : Test
 emptyJugTests =
     describe "empty jug tests"
-        [ test "empty Gallon3" <| \_ -> Expect.equal (emptyJug Gallon3 initJugs) ( ( Gallon3, 0 ), ( Gallon5, 5 ) )
-        , test "empty Gallon5" <| \_ -> Expect.equal (emptyJug Gallon5 initJugs) ( ( Gallon3, 3 ), ( Gallon5, 0 ) )
+        [ test "empty Gallon3" <| \_ -> Expect.equal (emptyJug Gallon3 initJugsFull) ( ( Gallon3, 0 ), ( Gallon5, 5 ) )
+        , test "empty Gallon5" <| \_ -> Expect.equal (emptyJug Gallon5 initJugsFull) ( ( Gallon3, 3 ), ( Gallon5, 0 ) )
         ]
