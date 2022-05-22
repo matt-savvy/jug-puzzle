@@ -11,8 +11,12 @@ type Jug
     | Gallon5
 
 
+type alias JugValue =
+    ( Jug, Int )
+
+
 type alias Jugs =
-    ( ( Jug, Int ), ( Jug, Int ) )
+    ( JugValue, JugValue )
 
 
 initJugs : Jugs
