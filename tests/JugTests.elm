@@ -94,3 +94,17 @@ fillJugTests =
         [ test "fill Gallon3" <| \_ -> Expect.equal (fillJug Gallon3 initJugsEmpty) ( ( Gallon3, 3 ), ( Gallon5, 0 ) )
         , test "fill Gallon5" <| \_ -> Expect.equal (fillJug Gallon5 initJugsEmpty) ( ( Gallon3, 0 ), ( Gallon5, 5 ) )
         ]
+
+
+createJugTest : String -> Int -> Int -> Test
+createJugTest description volume3gallon volume5gallon =
+    test description <| \_ -> Expect.equal (createJugs volume3gallon volume5gallon) ( ( Gallon3, volume3gallon ), ( Gallon5, volume5gallon ) )
+
+
+createJugTests : Test
+createJugTests =
+    describe "create jug tests"
+        [ createJugTest "0, 0" 0 0
+        , createJugTest "3, 5" 3 5
+        , createJugTest "2, 4" 2 4
+        ]

@@ -1,4 +1,4 @@
-module Jugs exposing (Jug(..), Jugs, emptyJug, fillJug, getCapacity, getJug, main, pour, updateJug)
+module Jugs exposing (Jug(..), JugValue, Jugs, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, main, pour, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, p, text)
@@ -17,6 +17,16 @@ type alias JugValue =
 
 type alias Jugs =
     ( JugValue, JugValue )
+
+
+createJug : Int -> Jug -> JugValue
+createJug volume jug =
+    ( jug, volume )
+
+
+createJugs : Int -> Int -> Jugs
+createJugs volume3gallon volume5gallon =
+    ( ( Gallon3, volume3gallon ), ( Gallon5, volume5gallon ) )
 
 
 initJugs : Jugs
@@ -142,7 +152,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Fill jug ->
-            ( { model | jugs = updateJug jug (getCapacity jug) model.jugs }, Cmd.none )
+            ( { model | jugs = fillJug jug model.jugs }, Cmd.none )
 
         Empty jug ->
             ( { model | jugs = emptyJug jug model.jugs }, Cmd.none )
