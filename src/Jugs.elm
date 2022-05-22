@@ -1,4 +1,4 @@
-module Jugs exposing (Jug(..), JugValue, Jugs, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, main, pour, updateJug)
+module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), applyMsg, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, main, pour, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, p, text)
@@ -138,17 +138,22 @@ viewPourButton source target description =
     div [] [ button [ onClick (Pour source target) ] [ text description ] ]
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
+applyMsg : Msg -> Jugs -> Jugs
+applyMsg msg jugs =
     case msg of
         Fill jug ->
-            ( { model | jugs = fillJug jug model.jugs }, Cmd.none )
+            fillJug jug jugs
 
         Empty jug ->
-            ( { model | jugs = emptyJug jug model.jugs }, Cmd.none )
+            emptyJug jug jugs
 
         Pour source target ->
-            ( { model | jugs = pour source target model.jugs }, Cmd.none )
+            pour source target jugs
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    ( { model | jugs = applyMsg msg model.jugs }, Cmd.none )
 
 
 main : Program () Model Msg
