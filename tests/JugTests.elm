@@ -71,3 +71,11 @@ pourTest : String -> Jug -> Jug -> Jugs -> Jugs -> Test
 pourTest description source target jugs expectedResult =
     test description <|
         \_ -> Expect.equal (pour source target jugs) expectedResult
+
+
+emptyJugTests : Test
+emptyJugTests =
+    describe "empty jug tests"
+        [ test "empty Gallon3" <| \_ -> Expect.equal (emptyJug Gallon3 initJugs) ( ( Gallon3, 0 ), ( Gallon5, 5 ) )
+        , test "empty Gallon5" <| \_ -> Expect.equal (emptyJug Gallon5 initJugs) ( ( Gallon3, 3 ), ( Gallon5, 0 ) )
+        ]

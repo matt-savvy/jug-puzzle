@@ -1,4 +1,4 @@
-module Jugs exposing (Jug(..), Jugs, getJug, getCapacity, main, pour, updateJug)
+module Jugs exposing (Jug(..), Jugs, emptyJug, getCapacity, getJug, main, pour, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, p, text)
@@ -76,6 +76,11 @@ pour source target jugs =
             jugs
 
 
+emptyJug : Jug -> Jugs -> Jugs
+emptyJug jug jugs =
+    updateJug jug 0 jugs
+
+
 type alias Model =
     { jugs : Jugs }
 
@@ -131,7 +136,7 @@ update msg model =
             ( { model | jugs = updateJug jug (getCapacity jug) model.jugs }, Cmd.none )
 
         Empty jug ->
-            ( { model | jugs = updateJug jug 0 model.jugs }, Cmd.none )
+            ( { model | jugs = emptyJug jug model.jugs }, Cmd.none )
 
         Pour source target ->
             ( { model | jugs = pour source target model.jugs }, Cmd.none )
