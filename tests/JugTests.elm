@@ -7,16 +7,12 @@ import Test exposing (..)
 
 initJugsFull : Jugs
 initJugsFull =
-    ( ( Gallon3, 3 )
-    , ( Gallon5, 5 )
-    )
+    createJugs 3 5
 
 
 initJugsEmpty : Jugs
 initJugsEmpty =
-    ( ( Gallon3, 0 )
-    , ( Gallon5, 0 )
-    )
+    createJugs 0 0
 
 
 getJugTest : String -> Jug -> Jugs -> Int -> Test
@@ -42,8 +38,8 @@ updateJugTest description jug newValue jugs expectedJugs =
 updateJugTests : Test
 updateJugTests =
     describe "test updateJug"
-        [ updateJugTest "update Gallon3 should update Gallon3" Gallon3 2 initJugsFull ( ( Gallon3, 2 ), ( Gallon5, 5 ) )
-        , updateJugTest "update Gallon5 should update Gallon5" Gallon5 4 initJugsFull ( ( Gallon3, 3 ), ( Gallon5, 4 ) )
+        [ updateJugTest "update Gallon3 should update Gallon3" Gallon3 2 initJugsFull (createJugs 2 5)
+        , updateJugTest "update Gallon5 should update Gallon5" Gallon5 4 initJugsFull (createJugs 3 4)
         ]
 
 
@@ -63,14 +59,14 @@ pourTests : Test
 pourTests =
     describe "test pour"
         -- pouring from 3 to 5
-        [ pourTest "pour Gallon3 3 -> Gallon5 0 should return 0, 3" Gallon3 Gallon5 ( ( Gallon3, 3 ), ( Gallon5, 0 ) ) ( ( Gallon3, 0 ), ( Gallon5, 3 ) )
-        , pourTest "pour Gallon3 3 -> Gallon5 4 should return 2, 5" Gallon3 Gallon5 ( ( Gallon3, 3 ), ( Gallon5, 4 ) ) ( ( Gallon3, 2 ), ( Gallon5, 5 ) )
-        , pourTest "pour Gallon3 3 -> Gallon5 5 should return 3, 5" Gallon3 Gallon5 ( ( Gallon3, 3 ), ( Gallon5, 5 ) ) ( ( Gallon3, 3 ), ( Gallon5, 5 ) )
+        [ pourTest "pour Gallon3 3 -> Gallon5 0 should return 0, 3" Gallon3 Gallon5 (createJugs 3 0) (createJugs 0 3)
+        , pourTest "pour Gallon3 3 -> Gallon5 4 should return 2, 5" Gallon3 Gallon5 (createJugs 3 4) (createJugs 2 5)
+        , pourTest "pour Gallon3 3 -> Gallon5 5 should return 3, 5" Gallon3 Gallon5 (createJugs 3 5) (createJugs 3 5)
 
         -- pouring from 5 to 3
-        , pourTest "pour Gallon3 0 <- Gallon5 5 should return 3, 2" Gallon5 Gallon3 ( ( Gallon3, 0 ), ( Gallon5, 5 ) ) ( ( Gallon3, 3 ), ( Gallon5, 2 ) )
-        , pourTest "pour Gallon3 2 <- Gallon5 5 should return 3, 4" Gallon5 Gallon3 ( ( Gallon3, 2 ), ( Gallon5, 5 ) ) ( ( Gallon3, 3 ), ( Gallon5, 4 ) )
-        , pourTest "pour Gallon3 3 <- Gallon5 2 should return 3, 2" Gallon5 Gallon3 ( ( Gallon3, 3 ), ( Gallon5, 2 ) ) ( ( Gallon3, 3 ), ( Gallon5, 2 ) )
+        , pourTest "pour Gallon3 0 <- Gallon5 5 should return 3, 2" Gallon5 Gallon3 (createJugs 0 5) (createJugs 3 2)
+        , pourTest "pour Gallon3 2 <- Gallon5 5 should return 3, 4" Gallon5 Gallon3 (createJugs 2 5) (createJugs 3 4)
+        , pourTest "pour Gallon3 3 <- Gallon5 2 should return 3, 2" Gallon5 Gallon3 (createJugs 3 2) (createJugs 3 2)
         ]
 
 
@@ -83,16 +79,16 @@ pourTest description source target jugs expectedResult =
 emptyJugTests : Test
 emptyJugTests =
     describe "empty jug tests"
-        [ test "empty Gallon3" <| \_ -> Expect.equal (emptyJug Gallon3 initJugsFull) ( ( Gallon3, 0 ), ( Gallon5, 5 ) )
-        , test "empty Gallon5" <| \_ -> Expect.equal (emptyJug Gallon5 initJugsFull) ( ( Gallon3, 3 ), ( Gallon5, 0 ) )
+        [ test "empty Gallon3" <| \_ -> Expect.equal (emptyJug Gallon3 initJugsFull) (createJugs 0 5)
+        , test "empty Gallon5" <| \_ -> Expect.equal (emptyJug Gallon5 initJugsFull) (createJugs 3 0)
         ]
 
 
 fillJugTests : Test
 fillJugTests =
     describe "fill jug tests"
-        [ test "fill Gallon3" <| \_ -> Expect.equal (fillJug Gallon3 initJugsEmpty) ( ( Gallon3, 3 ), ( Gallon5, 0 ) )
-        , test "fill Gallon5" <| \_ -> Expect.equal (fillJug Gallon5 initJugsEmpty) ( ( Gallon3, 0 ), ( Gallon5, 5 ) )
+        [ test "fill Gallon3" <| \_ -> Expect.equal (fillJug Gallon3 initJugsEmpty) (createJugs 3 0)
+        , test "fill Gallon5" <| \_ -> Expect.equal (fillJug Gallon5 initJugsEmpty) (createJugs 0 5)
         ]
 
 
