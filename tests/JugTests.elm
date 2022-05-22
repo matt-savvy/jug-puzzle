@@ -12,6 +12,13 @@ initJugsFull =
     )
 
 
+initJugsEmpty : Jugs
+initJugsEmpty =
+    ( ( Gallon3, 0 )
+    , ( Gallon5, 0 )
+    )
+
+
 getJugTest : String -> Jug -> Jugs -> Int -> Test
 getJugTest description jug jugs expectedValue =
     test description <|
@@ -78,4 +85,12 @@ emptyJugTests =
     describe "empty jug tests"
         [ test "empty Gallon3" <| \_ -> Expect.equal (emptyJug Gallon3 initJugsFull) ( ( Gallon3, 0 ), ( Gallon5, 5 ) )
         , test "empty Gallon5" <| \_ -> Expect.equal (emptyJug Gallon5 initJugsFull) ( ( Gallon3, 3 ), ( Gallon5, 0 ) )
+        ]
+
+
+fillJugTests : Test
+fillJugTests =
+    describe "fill jug tests"
+        [ test "fill Gallon3" <| \_ -> Expect.equal (fillJug Gallon3 initJugsEmpty) ( ( Gallon3, 3 ), ( Gallon5, 0 ) )
+        , test "fill Gallon5" <| \_ -> Expect.equal (fillJug Gallon5 initJugsEmpty) ( ( Gallon3, 0 ), ( Gallon5, 5 ) )
         ]

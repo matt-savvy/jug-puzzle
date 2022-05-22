@@ -1,4 +1,4 @@
-module Jugs exposing (Jug(..), Jugs, emptyJug, getCapacity, getJug, main, pour, updateJug)
+module Jugs exposing (Jug(..), Jugs, emptyJug, fillJug, getCapacity, getJug, main, pour, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, p, text)
@@ -79,6 +79,11 @@ pour source target jugs =
 emptyJug : Jug -> Jugs -> Jugs
 emptyJug jug jugs =
     updateJug jug 0 jugs
+
+
+fillJug : Jug -> Jugs -> Jugs
+fillJug jug jugs =
+    updateJug jug (getCapacity jug) jugs
 
 
 type alias Model =
