@@ -38,8 +38,8 @@ jugSolve jugs steps queue seenStates =
             nextQueue =
                 List.map (\step -> ( applyMsg step jugs, steps ++ [ step ] )) possibleSteps
                     |> List.append queue
-                    |> List.filter (\item -> not (List.member (Tuple.first item) seenStates))
-                    |> List.sortBy (\item -> Tuple.second item |> List.length)
+                    |> List.filter (\( state, _ ) -> not (List.member state seenStates))
+                    |> List.sortBy (\( _, stepList ) -> List.length stepList)
         in
         case
             List.head nextQueue
