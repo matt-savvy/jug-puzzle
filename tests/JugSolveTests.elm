@@ -19,4 +19,4 @@ solution =
 
 jugSolverTest : Test
 jugSolverTest =
-    test "sanity" <| \_ -> Expect.equal (jugSolver (createJugs 0 0)) solution
+    test "find shortest solution" <| \_ -> Expect.equal (jugSolver (createJugs 0 0)) solution
