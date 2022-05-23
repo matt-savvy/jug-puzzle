@@ -27,33 +27,28 @@ isSolved jugs =
 
 jugSolver : Jugs -> Steps
 jugSolver jugs =
-    jugSolve jugs [] [] 0
+    jugSolve jugs [] [] []
 
 
-jugSolve : Jugs -> Steps -> List Jugs -> Int -> Steps
-jugSolve jugs steps seenStates stepCounter =
+jugSolve : Jugs -> Steps -> List ( Jugs, Steps ) -> List Jugs -> Steps
+jugSolve jugs steps queue seenStates =
     if isSolved jugs then
         steps
 
-    else if stepCounter > 20 then
-        -- prevent infinte loops
-        []
-
     else
         let
-            -- filter out all steps which will give us the same state
-            availableSteps : Steps
-            availableSteps =
-                List.filter (\step -> applyMsg step jugs /= jugs) possibleSteps
-                    -- filter out all steps which will give us a step we've seen before
-                    |> List.filter (\step -> not (List.member (applyMsg step jugs) seenStates))
+            nextQueue : List ( Jugs, Steps )
+            nextQueue =
+                List.map (\step -> ( applyMsg step jugs, steps ++ [ step ] )) possibleSteps
+                    |> List.append queue
+                    |> List.filter (\item -> not (List.member (Tuple.first item) seenStates))
+                    |> List.sortBy (\item -> Tuple.second item |> List.length)
         in
         case
-            List.head
-                (List.map (\step -> jugSolve (applyMsg step jugs) (List.append steps [ step ]) (List.append seenStates [ jugs ]) (stepCounter + 1)) availableSteps)
+            List.head nextQueue
         of
             Just head ->
-                head
+                jugSolve (Tuple.first head) (Tuple.second head) nextQueue (jugs :: seenStates)
 
             Nothing ->
                 []
