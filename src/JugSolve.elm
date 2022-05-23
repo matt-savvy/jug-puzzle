@@ -7,6 +7,10 @@ type alias Steps =
     List Msg
 
 
+type alias StepQueue =
+    List ( Jugs, Steps )
+
+
 possibleSteps : Steps
 possibleSteps =
     [ Fill Gallon5
@@ -23,14 +27,14 @@ jugSolver jugs =
     jugSolve jugs [] [] []
 
 
-jugSolve : Jugs -> Steps -> List ( Jugs, Steps ) -> List Jugs -> Steps
+jugSolve : Jugs -> Steps -> StepQueue -> List Jugs -> Steps
 jugSolve jugs steps queue seenStates =
     if isSolved jugs then
         steps
 
     else
         let
-            nextQueue : List ( Jugs, Steps )
+            nextQueue : StepQueue
             nextQueue =
                 List.map (\step -> ( applyMsg step jugs, steps ++ [ step ] )) possibleSteps
                     |> List.append queue
