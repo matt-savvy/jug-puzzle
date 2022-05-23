@@ -44,8 +44,8 @@ jugSolve jugs steps queue seenStates =
         case
             List.head nextQueue
         of
-            Just head ->
-                jugSolve (Tuple.first head) (Tuple.second head) nextQueue (jugs :: seenStates)
+            Just ( nextJugs, nextSteps ) ->
+                jugSolve nextJugs nextSteps nextQueue (jugs :: seenStates)
 
             Nothing ->
                 []
