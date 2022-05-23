@@ -104,3 +104,12 @@ createJugTests =
         , createJugTest "3, 5" 3 5
         , createJugTest "2, 4" 2 4
         ]
+
+
+isSolvedTest : Test
+isSolvedTest =
+    describe "is solved tests"
+        [ test "3, 5" <| \_ -> Expect.equal (isSolved (createJugs 3 5)) False
+        , test "3, 4" <| \_ -> Expect.equal (isSolved (createJugs 3 4)) True
+        , test "2, 2" <| \_ -> Expect.equal (isSolved (createJugs 2 2)) False
+        ]

@@ -1,4 +1,4 @@
-module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), applyMsg, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, main, pour, updateJug)
+module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), applyMsg, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, isSolved, main, pour, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, p, text)
@@ -91,6 +91,11 @@ emptyJug jug jugs =
 fillJug : Jug -> Jugs -> Jugs
 fillJug jug jugs =
     updateJug jug (getCapacity jug) jugs
+
+
+isSolved : Jugs -> Bool
+isSolved jugs =
+    getJug Gallon5 jugs == 4
 
 
 type alias Model =
