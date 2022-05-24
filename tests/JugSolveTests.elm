@@ -1,7 +1,6 @@
 module JugSolveTests exposing (..)
 
 import Expect exposing (Expectation)
-import JugSolve exposing (..)
 import Jugs exposing (..)
 import Test exposing (..)
 

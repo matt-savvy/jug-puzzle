@@ -1,4 +1,4 @@
-module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), Step, Steps, applyStep, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, isSolved, main, pour, updateJug)
+module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), Step, Steps, applyStep, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, isSolved, jugSolver, main, pour, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, li, ol, p, text)
@@ -129,7 +129,10 @@ initialModel =
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [] [ text "measure 4 gallons exactly" ]
+        [ h1 []
+            [ text "measure 4 gallons exactly"
+            , button [ onClick Solve ] [ text "help!" ]
+            ]
         , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model.jugs
             , div [ id "pour-buttons" ]
@@ -218,8 +221,19 @@ applyStep step jugs =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        -- Solve ->
-        --     ( { model | jugs = applyStep msg model.jugs }, Cmd.none )
+        Solve ->
+            let
+                solution : Steps
+                solution =
+                    jugSolver model.jugs
+
+                -- apply solution
+                solvedJugs : Jugs
+                solvedJugs =
+                    List.foldl (\currentStep currentJugs -> applyStep currentStep currentJugs) model.jugs solution
+            in
+            ( { model | jugs = solvedJugs, steps = model.steps ++ solution }, Cmd.none )
+
         _ ->
             ( { model | steps = model.steps ++ [ msg ], jugs = applyStep msg model.jugs }, Cmd.none )
 
@@ -232,3 +246,47 @@ main =
         , subscriptions = \_ -> Sub.none
         , view = view
         }
+
+
+type alias StepQueue =
+    List ( Jugs, Steps )
+
+
+possibleSteps : Steps
+possibleSteps =
+    [ Fill Gallon5
+    , Fill Gallon3
+    , Empty Gallon5
+    , Empty Gallon3
+    , Pour Gallon3 Gallon5
+    , Pour Gallon5 Gallon3
+    ]
+
+
+jugSolver : Jugs -> Steps
+jugSolver jugs =
+    jugSolve jugs [] [] []
+
+
+jugSolve : Jugs -> Steps -> StepQueue -> List Jugs -> Steps
+jugSolve jugs steps queue seenStates =
+    if isSolved jugs then
+        steps
+
+    else
+        let
+            nextQueue : StepQueue
+            nextQueue =
+                List.map (\step -> ( applyStep step jugs, steps ++ [ step ] )) possibleSteps
+                    |> List.append queue
+                    |> List.filter (\( state, _ ) -> not (List.member state seenStates))
+                    |> List.sortBy (\( _, stepList ) -> List.length stepList)
+        in
+        case
+            List.head nextQueue
+        of
+            Just ( nextJugs, nextSteps ) ->
+                jugSolve nextJugs nextSteps nextQueue (jugs :: seenStates)
+
+            Nothing ->
+                []
