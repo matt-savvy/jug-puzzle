@@ -1,10 +1,7 @@
-module JugSolve exposing (Steps, jugSolver)
+module JugSolve exposing (jugSolver)
 
-import Jugs exposing (Jug(..), Jugs, Msg(..), applyMsg, isSolved)
-
-
-type alias Steps =
-    List Msg
+import Html exposing (Html, div, h2, li, ol, text)
+import Jugs exposing (Jug(..), Jugs, Msg(..), Step, Steps, applyStep, createJugs, isSolved)
 
 
 type alias StepQueue =
@@ -36,7 +33,7 @@ jugSolve jugs steps queue seenStates =
         let
             nextQueue : StepQueue
             nextQueue =
-                List.map (\step -> ( applyMsg step jugs, steps ++ [ step ] )) possibleSteps
+                List.map (\step -> ( applyStep step jugs, steps ++ [ step ] )) possibleSteps
                     |> List.append queue
                     |> List.filter (\( state, _ ) -> not (List.member state seenStates))
                     |> List.sortBy (\( _, stepList ) -> List.length stepList)

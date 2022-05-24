@@ -1,7 +1,7 @@
-module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), applyMsg, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, isSolved, main, pour, updateJug)
+module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), Step, Steps, applyStep, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, isSolved, main, pour, updateJug)
 
 import Browser
-import Html exposing (Html, button, div, h1, h2, p, text)
+import Html exposing (Html, button, div, h1, h2, li, ol, p, text)
 import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
 
@@ -17,6 +17,21 @@ type alias JugValue =
 
 type alias Jugs =
     ( JugValue, JugValue )
+
+
+type alias Step =
+    Msg
+
+
+type Msg
+    = Fill Jug
+    | Empty Jug
+    | Pour Jug Jug
+    | Solve
+
+
+type alias Steps =
+    List Step
 
 
 createJug : Int -> Jug -> JugValue
@@ -99,19 +114,16 @@ isSolved jugs =
 
 
 type alias Model =
-    { jugs : Jugs }
+    { jugs : Jugs
+    , steps : Steps
+    }
 
 
 initialModel : Model
 initialModel =
     { jugs = createJugs 0 0
+    , steps = []
     }
-
-
-type Msg
-    = Fill Jug
-    | Empty Jug
-    | Pour Jug Jug
 
 
 view : Model -> Html Msg
@@ -126,6 +138,7 @@ view model =
                 ]
             , viewJug Gallon5 "5 gallon jug" model.jugs
             ]
+        , viewSteps model.steps
         ]
 
 
@@ -143,9 +156,51 @@ viewPourButton source target description =
     div [] [ button [ onClick (Pour source target) ] [ text description ] ]
 
 
-applyMsg : Msg -> Jugs -> Jugs
-applyMsg msg jugs =
-    case msg of
+viewSteps : Steps -> Html Msg
+viewSteps steps =
+    div [] [ ol [] (List.map viewStep steps) ]
+
+
+stepToString : Step -> String
+stepToString step =
+    case step of
+        Fill Gallon3 ->
+            "Fill 3 gallon"
+
+        Empty Gallon3 ->
+            "Empty 3 gallon"
+
+        Pour Gallon3 Gallon5 ->
+            "Pour 3 gallon into 5 gallon"
+
+        Fill Gallon5 ->
+            "Fill 5 gallon"
+
+        Empty Gallon5 ->
+            "Empty 5 gallon"
+
+        Pour Gallon5 Gallon3 ->
+            "Pour 5 gallon into 3 gallon"
+
+        -- invalid states for completeness
+        Pour Gallon5 Gallon5 ->
+            "Pour 5 gallon into 5 gallon"
+
+        Pour Gallon3 Gallon3 ->
+            "Pour 3 gallon into 3 gallon"
+
+        _ ->
+            ""
+
+
+viewStep : Step -> Html Msg
+viewStep step =
+    li [] [ text (stepToString step) ]
+
+
+applyStep : Step -> Jugs -> Jugs
+applyStep step jugs =
+    case step of
         Fill jug ->
             fillJug jug jugs
 
@@ -155,10 +210,18 @@ applyMsg msg jugs =
         Pour source target ->
             pour source target jugs
 
+        -- default case for Msg variants that are not jug actions
+        _ ->
+            jugs
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( { model | jugs = applyMsg msg model.jugs }, Cmd.none )
+    case msg of
+        -- Solve ->
+        --     ( { model | jugs = applyStep msg model.jugs }, Cmd.none )
+        _ ->
+            ( { model | steps = model.steps ++ [ msg ], jugs = applyStep msg model.jugs }, Cmd.none )
 
 
 main : Program () Model Msg
