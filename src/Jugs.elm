@@ -27,7 +27,7 @@ type Msg
     = Fill Jug
     | Empty Jug
     | Pour Jug Jug
-    | Solve
+    | ClickedGetHint
 
 
 type alias Steps =
@@ -131,7 +131,7 @@ view model =
     div []
         [ h1 []
             [ text "measure 4 gallons exactly"
-            , button [ onClick Solve ] [ text "help!" ]
+            , button [ onClick ClickedGetHint ] [ text "Get Hint" ]
             ]
         , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model.jugs
@@ -221,7 +221,7 @@ applyStep step jugs =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Solve ->
+        ClickedGetHint ->
             let
                 solution : Steps
                 solution =
