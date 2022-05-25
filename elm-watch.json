@@ -1,0 +1,10 @@
+{
+    "targets": {
+        "Jugs": {
+            "inputs": [
+                "src/Jugs.elm"
+            ],
+            "output": "app.js"
+        }
+    }
+}

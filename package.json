@@ -7,7 +7,9 @@
   "name": "Jug puzzle",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "elm-watch": "^1.0.0-beta.10"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
