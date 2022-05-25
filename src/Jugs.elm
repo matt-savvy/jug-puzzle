@@ -223,16 +223,25 @@ update msg model =
     case msg of
         ClickedGetHint ->
             let
-                solution : Steps
-                solution =
-                    jugSolver model.jugs
-
-                -- apply solution
-                solvedJugs : Jugs
-                solvedJugs =
-                    List.foldl (\currentStep currentJugs -> applyStep currentStep currentJugs) model.jugs solution
+                nextStep : Maybe Step
+                nextStep =
+                    List.head (jugSolver model.jugs)
             in
-            ( { model | jugs = solvedJugs, steps = model.steps ++ solution }, Cmd.none )
+            case nextStep of
+                Just step ->
+                    let
+                        stepsWithHint : Steps
+                        stepsWithHint =
+                            model.steps ++ [ step ]
+
+                        jugsWithHint : Jugs
+                        jugsWithHint =
+                            applyStep step model.jugs
+                    in
+                    ( { model | jugs = jugsWithHint, steps = stepsWithHint }, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
 
         _ ->
             ( { model | steps = model.steps ++ [ msg ], jugs = applyStep msg model.jugs }, Cmd.none )
