@@ -122,6 +122,7 @@ type alias Model =
     { jugs : Jugs
     , steps : Steps
     , hint : Hint
+    , availableSteps : Steps
     }
 
 
@@ -135,6 +136,7 @@ initialModel =
     { jugs = emptyJugs
     , steps = []
     , hint = NoHint
+    , availableSteps = getAvailableSteps emptyJugs
     }
 
 
@@ -254,7 +256,12 @@ update msg model =
                     ( model, Cmd.none )
 
         Action step ->
-            ( { model | steps = model.steps ++ [ step ], jugs = applyStep step model.jugs, hint = NoHint }, Cmd.none )
+            let
+                nextJugs : Jugs
+                nextJugs =
+                    applyStep step model.jugs
+            in
+            ( { model | steps = model.steps ++ [ step ], jugs = nextJugs, hint = NoHint, availableSteps = getAvailableSteps nextJugs }, Cmd.none )
 
 
 main : Program () Model Msg
