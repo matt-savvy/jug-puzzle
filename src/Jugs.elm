@@ -1,4 +1,4 @@
-module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), Step, Steps, applyStep, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, isSolved, jugSolver, main, pour, updateJug)
+module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), Step(..), Steps, applyStep, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, isSolved, jugSolver, main, pour, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, li, ol, p, text)
@@ -19,14 +19,14 @@ type alias Jugs =
     ( JugValue, JugValue )
 
 
-type alias Step =
-    Msg
-
-
-type Msg
+type Step
     = Fill Jug
     | Empty Jug
     | Pour Jug Jug
+
+
+type Msg
+    = Action Step
     | ClickedGetHint
 
 
@@ -156,8 +156,8 @@ viewJug : Jug -> String -> Model -> Html Msg
 viewJug jug jugLabel { jugs, hint } =
     div [ class "jug" ]
         [ h2 [] [ text (jugLabel ++ ": " ++ String.fromInt (getJug jug jugs)) ]
-        , button [ classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Fill jug) ] [ text "fill" ]
-        , button [ classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Empty jug) ] [ text "empty" ]
+        , button [ classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
+        , button [ classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Action (Empty jug)) ] [ text "empty" ]
         ]
 
 
@@ -168,7 +168,7 @@ viewPourButton source target hint description =
         showHint =
             hint == Hint (Pour source target)
     in
-    div [] [ button [ classList [ ( "hint", showHint ) ], onClick (Pour source target) ] [ text description ] ]
+    div [] [ button [ classList [ ( "hint", showHint ) ], onClick (Action (Pour source target)) ] [ text description ] ]
 
 
 viewSteps : Steps -> Html Msg
@@ -204,9 +204,6 @@ stepToString step =
         Pour Gallon3 Gallon3 ->
             "Pour 3 gallon into 3 gallon"
 
-        _ ->
-            ""
-
 
 viewStep : Step -> Html Msg
 viewStep step =
@@ -224,10 +221,6 @@ applyStep step jugs =
 
         Pour source target ->
             pour source target jugs
-
-        -- default case for Msg variants that are not jug actions
-        _ ->
-            jugs
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -255,8 +248,8 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
-        _ ->
-            ( { model | steps = model.steps ++ [ msg ], jugs = applyStep msg model.jugs, hint = NoHint }, Cmd.none )
+        Action step ->
+            ( { model | steps = model.steps ++ [ step ], jugs = applyStep step model.jugs, hint = NoHint }, Cmd.none )
 
 
 main : Program () Model Msg
