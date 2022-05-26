@@ -20,3 +20,7 @@ button {
     align-self: center;
 }
 
+button.hint {
+    background-color: aqua;
+    transition: all 1s ease;
+}

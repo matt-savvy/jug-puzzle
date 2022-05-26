@@ -2,7 +2,7 @@ module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), Step, Steps, applyStep, 
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, li, ol, p, text)
-import Html.Attributes exposing (class, id)
+import Html.Attributes exposing (class, classList, id)
 import Html.Events exposing (onClick)
 
 
@@ -113,9 +113,15 @@ isSolved jugs =
     getJug Gallon5 jugs == 4
 
 
+type Hint
+    = Hint Step
+    | NoHint
+
+
 type alias Model =
     { jugs : Jugs
     , steps : Steps
+    , hint : Hint
     }
 
 
@@ -123,6 +129,7 @@ initialModel : Model
 initialModel =
     { jugs = createJugs 0 0
     , steps = []
+    , hint = NoHint
     }
 
 
@@ -134,29 +141,34 @@ view model =
             , button [ onClick ClickedGetHint ] [ text "Get Hint" ]
             ]
         , div [ id "jugs" ]
-            [ viewJug Gallon3 "3 gallon jug" model.jugs
+            [ viewJug Gallon3 "3 gallon jug" model
             , div [ id "pour-buttons" ]
-                [ viewPourButton Gallon3 Gallon5 " >> "
-                , viewPourButton Gallon5 Gallon3 " << "
+                [ viewPourButton Gallon3 Gallon5 model.hint " >> "
+                , viewPourButton Gallon5 Gallon3 model.hint " << "
                 ]
-            , viewJug Gallon5 "5 gallon jug" model.jugs
+            , viewJug Gallon5 "5 gallon jug" model
             ]
         , viewSteps model.steps
         ]
 
 
-viewJug : Jug -> String -> Jugs -> Html Msg
-viewJug jug jugLabel jugs =
+viewJug : Jug -> String -> Model -> Html Msg
+viewJug jug jugLabel { jugs, hint } =
     div [ class "jug" ]
         [ h2 [] [ text (jugLabel ++ ": " ++ String.fromInt (getJug jug jugs)) ]
-        , button [ onClick (Fill jug) ] [ text "fill" ]
-        , button [ onClick (Empty jug) ] [ text "empty" ]
+        , button [ classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Fill jug) ] [ text "fill" ]
+        , button [ classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Empty jug) ] [ text "empty" ]
         ]
 
 
-viewPourButton : Jug -> Jug -> String -> Html Msg
-viewPourButton source target description =
-    div [] [ button [ onClick (Pour source target) ] [ text description ] ]
+viewPourButton : Jug -> Jug -> Hint -> String -> Html Msg
+viewPourButton source target hint description =
+    let
+        showHint : Bool
+        showHint =
+            hint == Hint (Pour source target)
+    in
+    div [] [ button [ classList [ ( "hint", showHint ) ], onClick (Pour source target) ] [ text description ] ]
 
 
 viewSteps : Steps -> Html Msg
@@ -238,13 +250,13 @@ update msg model =
                         jugsWithHint =
                             applyStep step model.jugs
                     in
-                    ( { model | jugs = jugsWithHint, steps = stepsWithHint }, Cmd.none )
+                    ( { model | hint = Hint step }, Cmd.none )
 
                 Nothing ->
                     ( model, Cmd.none )
 
         _ ->
-            ( { model | steps = model.steps ++ [ msg ], jugs = applyStep msg model.jugs }, Cmd.none )
+            ( { model | steps = model.steps ++ [ msg ], jugs = applyStep msg model.jugs, hint = NoHint }, Cmd.none )
 
 
 main : Program () Model Msg
