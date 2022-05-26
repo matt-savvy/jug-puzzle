@@ -148,8 +148,8 @@ view model =
         , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model
             , div [ id "pour-buttons" ]
-                [ viewPourButton Gallon3 Gallon5 model.hint " >> "
-                , viewPourButton Gallon5 Gallon3 model.hint " << "
+                [ viewPourButton Gallon3 Gallon5 model " >> "
+                , viewPourButton Gallon5 Gallon3 model " << "
                 ]
             , viewJug Gallon5 "5 gallon jug" model
             ]
@@ -166,8 +166,8 @@ viewJug jug jugLabel { jugs, hint } =
         ]
 
 
-viewPourButton : Jug -> Jug -> Hint -> String -> Html Msg
-viewPourButton source target hint description =
+viewPourButton : Jug -> Jug -> Model -> String -> Html Msg
+viewPourButton source target { hint } description =
     let
         showHint : Bool
         showHint =
