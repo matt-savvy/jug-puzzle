@@ -125,9 +125,14 @@ type alias Model =
     }
 
 
+emptyJugs : Jugs
+emptyJugs =
+    createJugs 0 0
+
+
 initialModel : Model
 initialModel =
-    { jugs = createJugs 0 0
+    { jugs = emptyJugs
     , steps = []
     , hint = NoHint
     }
