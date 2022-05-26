@@ -261,7 +261,11 @@ update msg model =
                 nextJugs =
                     applyStep step model.jugs
             in
-            ( { model | steps = model.steps ++ [ step ], jugs = nextJugs, hint = NoHint, availableSteps = getAvailableSteps nextJugs }, Cmd.none )
+            if nextJugs == model.jugs then
+                ( model, Cmd.none )
+
+            else
+                ( { model | steps = model.steps ++ [ step ], jugs = nextJugs, hint = NoHint, availableSteps = getAvailableSteps nextJugs }, Cmd.none )
 
 
 main : Program () Model Msg
