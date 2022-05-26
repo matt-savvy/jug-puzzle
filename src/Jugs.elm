@@ -2,7 +2,7 @@ module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), Step(..), Steps, applySt
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, li, ol, p, text)
-import Html.Attributes exposing (class, classList, id)
+import Html.Attributes exposing (class, classList, disabled, id)
 import Html.Events exposing (onClick)
 
 
@@ -160,22 +160,27 @@ view model =
 
 
 viewJug : Jug -> String -> Model -> Html Msg
-viewJug jug jugLabel { jugs, hint } =
+viewJug jug jugLabel { jugs, hint, availableSteps } =
     div [ class "jug" ]
         [ h2 [] [ text (jugLabel ++ ": " ++ String.fromInt (getJug jug jugs)) ]
-        , button [ classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
-        , button [ classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Action (Empty jug)) ] [ text "empty" ]
+        , button [ disabled (isDisabled (Fill jug) availableSteps), classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
+        , button [ disabled (isDisabled (Empty jug) availableSteps), classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Action (Empty jug)) ] [ text "empty" ]
         ]
 
 
 viewPourButton : Jug -> Jug -> Model -> String -> Html Msg
-viewPourButton source target { hint } description =
+viewPourButton source target { hint, availableSteps } description =
     let
         showHint : Bool
         showHint =
             hint == Hint (Pour source target)
     in
-    div [] [ button [ classList [ ( "hint", showHint ) ], onClick (Action (Pour source target)) ] [ text description ] ]
+    div [] [ button [ disabled (isDisabled (Pour source target) availableSteps), classList [ ( "hint", showHint ) ], onClick (Action (Pour source target)) ] [ text description ] ]
+
+
+isDisabled : Step -> Steps -> Bool
+isDisabled step availableSteps =
+    not (List.member step availableSteps)
 
 
 viewSteps : Steps -> Html Msg
