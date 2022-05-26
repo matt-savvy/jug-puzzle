@@ -1,4 +1,4 @@
-module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), Step(..), Steps, applyStep, createJug, createJugs, emptyJug, fillJug, getCapacity, getJug, isSolved, jugSolver, main, pour, updateJug)
+module Jugs exposing (Jug(..), JugValue, Jugs, Msg(..), Step(..), Steps, applyStep, createJug, createJugs, emptyJug, fillJug, getAvailableSteps, getCapacity, getJug, isSolved, jugSolver, main, pour, updateJug)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, li, ol, p, text)
@@ -268,13 +268,18 @@ type alias StepQueue =
 
 possibleSteps : Steps
 possibleSteps =
-    [ Fill Gallon5
-    , Fill Gallon3
-    , Empty Gallon5
+    [ Fill Gallon3
+    , Fill Gallon5
     , Empty Gallon3
+    , Empty Gallon5
     , Pour Gallon3 Gallon5
     , Pour Gallon5 Gallon3
     ]
+
+
+getAvailableSteps : Jugs -> Steps
+getAvailableSteps jugs =
+    List.filter (\step -> applyStep step jugs /= jugs) possibleSteps
 
 
 jugSolver : Jugs -> Steps

@@ -113,3 +113,27 @@ isSolvedTest =
         , test "3, 4" <| \_ -> Expect.equal (isSolved (createJugs 3 4)) True
         , test "2, 2" <| \_ -> Expect.equal (isSolved (createJugs 2 2)) False
         ]
+
+
+getAvailableStepTest : Int -> Int -> Steps -> Test
+getAvailableStepTest amountGallon3 amountGallon5 expectedSteps =
+    let
+        description : String
+        description =
+            String.fromInt amountGallon3 ++ ", " ++ String.fromInt amountGallon5
+    in
+    test description <|
+        \_ ->
+            Expect.equal (getAvailableSteps (createJugs amountGallon3 amountGallon5)) expectedSteps
+
+
+getAvailableStepsTests : Test
+getAvailableStepsTests =
+    describe "getAvailableStepsTests"
+        [ getAvailableStepTest 0 0 [ Fill Gallon3, Fill Gallon5 ]
+        , getAvailableStepTest 1 0 [ Fill Gallon3, Fill Gallon5, Empty Gallon3, Pour Gallon3 Gallon5 ]
+        , getAvailableStepTest 3 0 [ Fill Gallon5, Empty Gallon3, Pour Gallon3 Gallon5 ]
+        , getAvailableStepTest 0 1 [ Fill Gallon3, Fill Gallon5, Empty Gallon5, Pour Gallon5 Gallon3 ]
+        , getAvailableStepTest 0 5 [ Fill Gallon3, Empty Gallon5, Pour Gallon5 Gallon3 ]
+        , getAvailableStepTest 2 4 [ Fill Gallon3, Fill Gallon5, Empty Gallon3, Empty Gallon5, Pour Gallon3 Gallon5, Pour Gallon5 Gallon3 ]
+        ]
