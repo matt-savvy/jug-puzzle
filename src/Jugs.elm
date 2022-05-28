@@ -280,7 +280,7 @@ update msg model =
                     List.take (List.length model.steps - 1) model.steps
 
                 prevJugs =
-                    List.foldl (\step jugs -> applyStep step jugs) emptyJugs prevSteps
+                    List.foldl applyStep emptyJugs prevSteps
             in
             ( { model | steps = prevSteps, jugs = prevJugs, hint = NoHint, availableSteps = getAvailableSteps prevJugs }, Cmd.none )
 
