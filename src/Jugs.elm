@@ -147,7 +147,7 @@ view model =
         [ h1 []
             [ text "measure 4 gallons exactly"
             , button [ onClick ClickedGetHint ] [ text "Get Hint" ]
-            , button [ onClick ClickedUndo ] [ text "undo last move" ]
+            , button [ disabled (List.isEmpty model.steps), onClick ClickedUndo ] [ text "undo last move" ]
             ]
         , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model
