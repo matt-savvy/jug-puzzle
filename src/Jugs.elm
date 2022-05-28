@@ -28,6 +28,7 @@ type Step
 type Msg
     = Action Step
     | ClickedGetHint
+    | ClickedUndo
 
 
 type alias Steps =
@@ -146,6 +147,7 @@ view model =
         [ h1 []
             [ text "measure 4 gallons exactly"
             , button [ onClick ClickedGetHint ] [ text "Get Hint" ]
+            , button [ onClick ClickedUndo ] [ text "undo last move" ]
             ]
         , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model
@@ -271,6 +273,16 @@ update msg model =
 
             else
                 ( { model | steps = model.steps ++ [ step ], jugs = nextJugs, hint = NoHint, availableSteps = getAvailableSteps nextJugs }, Cmd.none )
+
+        ClickedUndo ->
+            let
+                prevSteps =
+                    List.take (List.length model.steps - 1) model.steps
+
+                prevJugs =
+                    List.foldl (\step jugs -> applyStep step jugs) emptyJugs prevSteps
+            in
+            ( { model | steps = prevSteps, jugs = prevJugs, hint = NoHint, availableSteps = getAvailableSteps prevJugs }, Cmd.none )
 
 
 main : Program () Model Msg
