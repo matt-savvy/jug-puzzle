@@ -1,4 +1,4 @@
-module Jugs exposing (Hint(..), Jug(..), JugValue, Jugs, Step(..), Steps(..), applyStep, applySteps, createJugs, dropLastStep, emptyJug, emptySteps, fillJug, getAvailableSteps, getCapacity, getHint, getJug, isSolved, jugSolver, pour, pushStep, stepMap, stepMember, updateJug)
+module Jugs exposing (Hint(..), Jug(..), Jugs(..), Step(..), Steps(..), applyStep, applySteps, createJugs, dropLastStep, emptyJug, emptySteps, fillJug, getAvailableSteps, getCapacity, getHint, getJug, isSolved, jugSolver, pour, pushStep, stepMap, stepMember, updateJug)
 
 -- HIGH LEVEL PUZZLE LOGIC
 
@@ -184,17 +184,17 @@ pour source target jugs =
 
 createJugs : Int -> Int -> Jugs
 createJugs volume3gallon volume5gallon =
-    ( ( Gallon3, volume3gallon ), ( Gallon5, volume5gallon ) )
+    Jugs ( volume3gallon, volume5gallon )
 
 
 getJug : Jug -> Jugs -> Int
-getJug jug jugs =
+getJug jug (Jugs jugs) =
     case jug of
         Gallon3 ->
-            Tuple.second (Tuple.first jugs)
+            Tuple.first jugs
 
         Gallon5 ->
-            Tuple.second (Tuple.second jugs)
+            Tuple.second jugs
 
 
 updateJug : Jug -> Int -> Jugs -> Jugs
@@ -218,7 +218,7 @@ getCapacity jug =
 
 
 
--- JUG
+-- JUG TYPES
 
 
 type Jug
@@ -226,9 +226,5 @@ type Jug
     | Gallon5
 
 
-type alias JugValue =
-    ( Jug, Int )
-
-
-type alias Jugs =
-    ( JugValue, JugValue )
+type Jugs
+    = Jugs ( Int, Int )

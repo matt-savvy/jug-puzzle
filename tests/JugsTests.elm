@@ -1,7 +1,7 @@
 module JugsTests exposing (createJugTests, emptyJugTests, fillJugTests, getAvailableStepsTests, getJugsTests, isSolvedTest, pourTests, testGetMax3, testGetMax5, updateJugTests)
 
 import Expect
-import Jugs exposing (Jug(..), Jugs, Step(..), Steps(..), createJugs, emptyJug, fillJug, getAvailableSteps, getCapacity, getJug, isSolved, pour, updateJug, jugSolver)
+import Jugs exposing (Jug(..), Jugs(..), Step(..), Steps(..), createJugs, emptyJug, fillJug, getAvailableSteps, getCapacity, getJug, isSolved, jugSolver, pour, updateJug)
 import Test exposing (Test, describe, test)
 
 
@@ -94,7 +94,7 @@ fillJugTests =
 
 createJugTest : String -> Int -> Int -> Test
 createJugTest description volume3gallon volume5gallon =
-    test description <| \_ -> Expect.equal (createJugs volume3gallon volume5gallon) ( ( Gallon3, volume3gallon ), ( Gallon5, volume5gallon ) )
+    test description <| \_ -> Expect.equal (createJugs volume3gallon volume5gallon) (Jugs ( volume3gallon, volume5gallon ))
 
 
 createJugTests : Test
