@@ -102,10 +102,14 @@ view model =
         noStepsMade : Bool
         noStepsMade =
             model.steps == emptySteps
+
+        message : String
+        message =
+            "Fill one of the jugs with exactly four gallons of water"
     in
     div []
         [ h1 []
-            [ text "Fill one of the jugs with exactly four gallons of water"
+            [ text message
             , button [ disabled noStepsMade, onClick ClickedReset ] [ text "start over" ]
             , button [ onClick ClickedGetHint ] [ text "Get Hint" ]
             , button [ disabled noStepsMade, onClick ClickedUndo ] [ text "undo last move" ]
