@@ -4,7 +4,7 @@ import Browser
 import Html exposing (Html, button, div, h1, h2, li, ol, p, text)
 import Html.Attributes exposing (class, classList, disabled, id)
 import Html.Events exposing (onClick)
-import Jugs exposing (Jug(..), Jugs, Step(..), Steps, applyStep, createJugs, getAvailableSteps, getJug, jugSolver)
+import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps, applyStep, createJugs, getAvailableSteps, getHint, getJug, jugSolver)
 
 
 
@@ -31,11 +31,6 @@ type alias Model =
     , hint : Hint
     , availableSteps : Steps
     }
-
-
-type Hint
-    = Hint Step
-    | NoHint
 
 
 emptyJugs : Jugs
@@ -67,26 +62,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ClickedGetHint ->
-            let
-                nextStep : Maybe Step
-                nextStep =
-                    List.head (jugSolver model.jugs)
-            in
-            case nextStep of
-                Just step ->
-                    let
-                        stepsWithHint : Steps
-                        stepsWithHint =
-                            model.steps ++ [ step ]
-
-                        jugsWithHint : Jugs
-                        jugsWithHint =
-                            applyStep step model.jugs
-                    in
-                    ( { model | hint = Hint step }, Cmd.none )
-
-                Nothing ->
-                    ( model, Cmd.none )
+            ( { model | hint = getHint model.jugs }, Cmd.none )
 
         Action step ->
             let

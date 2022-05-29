@@ -1,6 +1,21 @@
-module Jugs exposing (Jug(..), JugValue, Jugs, Step(..), Steps, applyStep, createJugs, emptyJug, fillJug, getAvailableSteps, getCapacity, getJug, isSolved, jugSolver, pour, updateJug)
+module Jugs exposing (Hint(..), Jug(..), JugValue, Jugs, Step(..), Steps, applyStep, createJugs, emptyJug, fillJug, getAvailableSteps, getCapacity, getHint, getJug, isSolved, jugSolver, pour, updateJug)
 
 -- HIGH LEVEL PUZZLE LOGIC
+
+
+type Hint
+    = Hint Step
+    | NoHint
+
+
+getHint : Jugs -> Hint
+getHint jugs =
+    case List.head (jugSolver jugs) of
+        Just step ->
+            Hint step
+
+        Nothing ->
+            NoHint
 
 
 getAvailableSteps : Jugs -> Steps
