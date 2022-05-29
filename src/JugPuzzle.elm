@@ -138,8 +138,8 @@ viewJug : Jug -> String -> Model -> Html Msg
 viewJug jug jugLabel { jugs, hint, availableSteps } =
     div [ class "jug" ]
         [ h2 [] [ text (jugLabel ++ ": " ++ String.fromInt (getJug jug jugs)) ]
-        , button [ disabled (isDisabled (Fill jug) availableSteps), classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
-        , button [ disabled (isDisabled (Empty jug) availableSteps), classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Action (Empty jug)) ] [ text "empty" ]
+        , button [ disabled (isNoOp (Fill jug) availableSteps), classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
+        , button [ disabled (isNoOp (Empty jug) availableSteps), classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Action (Empty jug)) ] [ text "empty" ]
         ]
 
 
@@ -150,11 +150,11 @@ viewPourButton source target { hint, availableSteps } description =
         showHint =
             hint == Hint (Pour source target)
     in
-    div [] [ button [ disabled (isDisabled (Pour source target) availableSteps), classList [ ( "hint", showHint ) ], onClick (Action (Pour source target)) ] [ text description ] ]
+    div [] [ button [ disabled (isNoOp (Pour source target) availableSteps), classList [ ( "hint", showHint ) ], onClick (Action (Pour source target)) ] [ text description ] ]
 
 
-isDisabled : Step -> List Step -> Bool
-isDisabled step availableSteps =
+isNoOp : Step -> List Step -> Bool
+isNoOp step availableSteps =
     not (List.member step availableSteps)
 
 
