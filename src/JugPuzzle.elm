@@ -105,7 +105,7 @@ view model =
     in
     div []
         [ h1 []
-            [ text "measure 4 gallons exactly"
+            [ text "Fill one of the jugs with exactly four gallons of water"
             , button [ disabled noStepsMade, onClick ClickedReset ] [ text "start over" ]
             , button [ onClick ClickedGetHint ] [ text "Get Hint" ]
             , button [ disabled noStepsMade, onClick ClickedUndo ] [ text "undo last move" ]
