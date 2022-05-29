@@ -4,7 +4,7 @@ import Browser
 import Html exposing (Html, button, div, h1, h2, li, ol, text)
 import Html.Attributes exposing (class, classList, disabled, id)
 import Html.Events exposing (onClick)
-import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps(..), applyStep, applySteps, createJugs, dropLastStep, emptySteps, getAvailableSteps, getHint, getJug, pushStep, stepMap, stepMember)
+import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps(..), applyStep, applySteps, createJugs, dropLastStep, emptySteps, getAvailableSteps, getHint, getJug, isSolved, pushStep, stepMap, stepMember)
 
 
 
@@ -103,9 +103,17 @@ view model =
         noStepsMade =
             model.steps == emptySteps
 
+        solved : Bool
+        solved =
+            isSolved model.jugs
+
         message : String
         message =
-            "Fill one of the jugs with exactly four gallons of water"
+            if solved then
+                "You did it!"
+
+            else
+                "Fill one of the jugs with exactly four gallons of water"
     in
     div []
         [ h1 []
