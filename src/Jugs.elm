@@ -116,9 +116,11 @@ fillJug jug jugs =
 pour : Jug -> Jug -> Jugs -> Jugs
 pour source target jugs =
     let
+        spaceLeft : Int
         spaceLeft =
             getCapacity target - getJug target jugs
 
+        amountToPour : Int
         amountToPour =
             min spaceLeft (getJug source jugs)
     in
