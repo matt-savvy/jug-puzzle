@@ -1,7 +1,7 @@
 module JugsTests exposing (createJugTests, emptyJugTests, fillJugTests, getAvailableStepsTests, getJugsTests, isSolvedTest, pourTests, testGetMax3, testGetMax5, updateJugTests)
 
 import Expect
-import Jugs exposing (Jug(..), Jugs, Step(..), Steps, createJugs, emptyJug, fillJug, getAvailableSteps, getCapacity, getJug, isSolved, pour, updateJug)
+import Jugs exposing (Jug(..), Jugs, Step(..), Steps(..), createJugs, emptyJug, fillJug, getAvailableSteps, getCapacity, getJug, isSolved, pour, updateJug, jugSolver)
 import Test exposing (Test, describe, test)
 
 
@@ -137,3 +137,20 @@ getAvailableStepsTests =
         , getAvailableStepTest 0 5 [ Fill Gallon3, Empty Gallon5, Pour Gallon5 Gallon3 ]
         , getAvailableStepTest 2 4 [ Fill Gallon3, Fill Gallon5, Empty Gallon3, Empty Gallon5, Pour Gallon3 Gallon5, Pour Gallon5 Gallon3 ]
         ]
+
+
+solution : Steps
+solution =
+    Steps
+        [ Fill Gallon5
+        , Pour Gallon5 Gallon3
+        , Empty Gallon3
+        , Pour Gallon5 Gallon3
+        , Fill Gallon5
+        , Pour Gallon5 Gallon3
+        ]
+
+
+jugSolverTest : Test
+jugSolverTest =
+    test "find shortest solution" <| \_ -> Expect.equal (jugSolver (createJugs 0 0)) solution
