@@ -165,14 +165,14 @@ pour source target jugs =
     in
     case ( source, target ) of
         ( Gallon3, Gallon5 ) ->
-            ( ( Gallon3, getJug Gallon3 jugs - amountToPour )
-            , ( Gallon5, getJug Gallon5 jugs + amountToPour )
-            )
+            createJugs
+                (getJug Gallon3 jugs - amountToPour)
+                (getJug Gallon5 jugs + amountToPour)
 
         ( Gallon5, Gallon3 ) ->
-            ( ( Gallon3, getJug Gallon3 jugs + amountToPour )
-            , ( Gallon5, getJug Gallon5 jugs - amountToPour )
-            )
+            createJugs
+                (getJug Gallon3 jugs + amountToPour)
+                (getJug Gallon5 jugs - amountToPour)
 
         _ ->
             jugs
