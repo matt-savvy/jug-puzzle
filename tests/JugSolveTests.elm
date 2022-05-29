@@ -1,8 +1,8 @@
-module JugSolveTests exposing (..)
+module JugSolveTests exposing (jugSolverTest)
 
 import Expect
-import Jugs exposing (..)
-import Test exposing (..)
+import Jugs exposing (Jug(..), Step(..), Steps, createJugs, jugSolver)
+import Test exposing (Test, test)
 
 
 solution : Steps

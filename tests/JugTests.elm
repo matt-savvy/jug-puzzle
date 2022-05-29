@@ -1,8 +1,8 @@
-module JugTests exposing (..)
+module JugTests exposing (createJugTests, emptyJugTests, fillJugTests, getAvailableStepsTests, getJugsTests, isSolvedTest, pourTests, testGetMax3, testGetMax5, updateJugTests)
 
 import Expect
-import Jugs exposing (..)
-import Test exposing (..)
+import Jugs exposing (Jug(..), Jugs, Step(..), Steps, createJugs, emptyJug, fillJug, getAvailableSteps, getCapacity, getJug, isSolved, pour, updateJug)
+import Test exposing (Test, describe, test)
 
 
 initJugsFull : Jugs

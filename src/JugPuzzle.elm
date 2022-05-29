@@ -1,4 +1,4 @@
-module JugPuzzle exposing (main)
+module JugPuzzle exposing (Model, Msg, main)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, li, ol, text)
