@@ -116,9 +116,9 @@ view model =
                 "Fill one of the jugs with exactly four gallons of water"
     in
     div []
-        [ h1 []
-            [ text message
-            , button [ disabled noStepsMade, onClick ClickedReset ] [ text "start over" ]
+        [ h1 [] [ text message ]
+        , div [ id "game-buttons" ]
+            [ button [ disabled noStepsMade, onClick ClickedReset ] [ text "start over" ]
             , button [ onClick ClickedGetHint ] [ text "Get Hint" ]
             , button [ disabled noStepsMade, onClick ClickedUndo ] [ text "undo last move" ]
             ]

@@ -16,6 +16,11 @@ button {
     margin: 0 100px;
 }
 
+#game-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
 #pour-buttons {
     align-self: center;
 }
