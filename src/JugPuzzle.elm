@@ -78,9 +78,11 @@ update msg model =
 
         ClickedUndo ->
             let
+                prevSteps : Steps
                 prevSteps =
                     List.take (List.length model.steps - 1) model.steps
 
+                prevJugs : Jugs
                 prevJugs =
                     List.foldl applyStep emptyJugs prevSteps
             in
