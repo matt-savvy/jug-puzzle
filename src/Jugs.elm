@@ -201,10 +201,10 @@ updateJug : Jug -> Int -> Jugs -> Jugs
 updateJug jug newValue jugs =
     case jug of
         Gallon3 ->
-            ( ( Gallon3, newValue ), Tuple.second jugs )
+            createJugs newValue (getJug Gallon5 jugs)
 
         Gallon5 ->
-            ( Tuple.first jugs, ( Gallon5, newValue ) )
+            createJugs (getJug Gallon3 jugs) newValue
 
 
 getCapacity : Jug -> Int
