@@ -1,6 +1,6 @@
 module JugTests exposing (..)
 
-import Expect exposing (Expectation)
+import Expect
 import Jugs exposing (..)
 import Test exposing (..)
 

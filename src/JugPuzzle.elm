@@ -1,10 +1,10 @@
 module JugPuzzle exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, h1, h2, li, ol, p, text)
+import Html exposing (Html, button, div, h1, h2, li, ol, text)
 import Html.Attributes exposing (class, classList, disabled, id)
 import Html.Events exposing (onClick)
-import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps, applyStep, createJugs, getAvailableSteps, getHint, getJug, jugSolver)
+import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps, applyStep, createJugs, getAvailableSteps, getHint, getJug)
 
 
 
