@@ -1,19 +1,20 @@
 module JugSolveTests exposing (jugSolverTest)
 
 import Expect
-import Jugs exposing (Jug(..), Step(..), Steps, createJugs, jugSolver)
+import Jugs exposing (Jug(..), Step(..), Steps(..), createJugs, jugSolver)
 import Test exposing (Test, test)
 
 
 solution : Steps
 solution =
-    [ Fill Gallon5
-    , Pour Gallon5 Gallon3
-    , Empty Gallon3
-    , Pour Gallon5 Gallon3
-    , Fill Gallon5
-    , Pour Gallon5 Gallon3
-    ]
+    Steps
+        [ Fill Gallon5
+        , Pour Gallon5 Gallon3
+        , Empty Gallon3
+        , Pour Gallon5 Gallon3
+        , Fill Gallon5
+        , Pour Gallon5 Gallon3
+        ]
 
 
 jugSolverTest : Test

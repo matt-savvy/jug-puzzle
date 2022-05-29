@@ -1,4 +1,4 @@
-module Jugs exposing (Hint(..), Jug(..), JugValue, Jugs, Step(..), Steps, applyStep, createJugs, emptyJug, fillJug, getAvailableSteps, getCapacity, getHint, getJug, isSolved, jugSolver, pour, updateJug)
+module Jugs exposing (Hint(..), Jug(..), JugValue, Jugs, Step(..), Steps(..), applyStep, applySteps, createJugs, dropLastStep, emptyJug, emptySteps, fillJug, getAvailableSteps, getCapacity, getHint, getJug, isSolved, jugSolver, pour, pushStep, stepMap, stepMember, updateJug)
 
 -- HIGH LEVEL PUZZLE LOGIC
 
@@ -10,7 +10,7 @@ type Hint
 
 getHint : Jugs -> Hint
 getHint jugs =
-    case List.head (jugSolver jugs) of
+    case stepHead (jugSolver jugs) of
         Just step ->
             Hint step
 
@@ -18,21 +18,21 @@ getHint jugs =
             NoHint
 
 
-getAvailableSteps : Jugs -> Steps
+getAvailableSteps : Jugs -> List Step
 getAvailableSteps jugs =
     List.filter (\step -> applyStep step jugs /= jugs) possibleSteps
 
 
 jugSolver : Jugs -> Steps
 jugSolver jugs =
-    jugSolve jugs [] [] []
+    Steps (jugSolve jugs [] [] [])
 
 
 type alias StepQueue =
-    List ( Jugs, Steps )
+    List ( Jugs, List Step )
 
 
-jugSolve : Jugs -> Steps -> StepQueue -> List Jugs -> Steps
+jugSolve : Jugs -> List Step -> StepQueue -> List Jugs -> List Step
 jugSolve jugs steps queue seenStates =
     if isSolved jugs then
         steps
@@ -56,7 +56,7 @@ jugSolve jugs steps queue seenStates =
                 []
 
 
-possibleSteps : Steps
+possibleSteps : List Step
 possibleSteps =
     [ Fill Gallon3
     , Fill Gallon5
@@ -65,6 +65,45 @@ possibleSteps =
     , Pour Gallon3 Gallon5
     , Pour Gallon5 Gallon3
     ]
+
+
+
+-- STEP OPERATIONS
+
+
+emptySteps : Steps
+emptySteps =
+    Steps []
+
+
+stepHead : Steps -> Maybe Step
+stepHead (Steps steps) =
+    List.head steps
+
+
+stepMember : Step -> Steps -> Bool
+stepMember step (Steps steps) =
+    List.member step steps
+
+
+applySteps : Jugs -> Steps -> Jugs
+applySteps jugs (Steps steps) =
+    List.foldl applyStep jugs steps
+
+
+pushStep : Steps -> Step -> Steps
+pushStep (Steps steps) step =
+    Steps (steps ++ [ step ])
+
+
+dropLastStep : Steps -> Steps
+dropLastStep (Steps steps) =
+    Steps (List.take (List.length steps - 1) steps)
+
+
+stepMap : (Step -> a) -> Steps -> List a
+stepMap f (Steps steps) =
+    List.map f steps
 
 
 
@@ -77,8 +116,8 @@ type Step
     | Pour Jug Jug
 
 
-type alias Steps =
-    List Step
+type Steps
+    = Steps (List Step)
 
 
 applyStep : Step -> Jugs -> Jugs

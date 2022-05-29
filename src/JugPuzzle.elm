@@ -4,7 +4,7 @@ import Browser
 import Html exposing (Html, button, div, h1, h2, li, ol, text)
 import Html.Attributes exposing (class, classList, disabled, id)
 import Html.Events exposing (onClick)
-import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps, applyStep, createJugs, getAvailableSteps, getHint, getJug)
+import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps(..), applyStep, applySteps, createJugs, dropLastStep, emptySteps, getAvailableSteps, getHint, getJug, pushStep, stepMap, stepMember)
 
 
 
@@ -29,7 +29,7 @@ type alias Model =
     { jugs : Jugs
     , steps : Steps
     , hint : Hint
-    , availableSteps : Steps
+    , availableSteps : List Step
     }
 
 
@@ -41,7 +41,7 @@ emptyJugs =
 initialModel : Model
 initialModel =
     { jugs = emptyJugs
-    , steps = []
+    , steps = emptySteps
     , hint = NoHint
     , availableSteps = getAvailableSteps emptyJugs
     }
@@ -74,17 +74,17 @@ update msg model =
                 ( model, Cmd.none )
 
             else
-                ( { model | steps = model.steps ++ [ step ], jugs = nextJugs, hint = NoHint, availableSteps = getAvailableSteps nextJugs }, Cmd.none )
+                ( { model | steps = pushStep model.steps step, jugs = nextJugs, hint = NoHint, availableSteps = getAvailableSteps nextJugs }, Cmd.none )
 
         ClickedUndo ->
             let
                 prevSteps : Steps
                 prevSteps =
-                    List.take (List.length model.steps - 1) model.steps
+                    dropLastStep model.steps
 
                 prevJugs : Jugs
                 prevJugs =
-                    List.foldl applyStep emptyJugs prevSteps
+                    applySteps emptyJugs prevSteps
             in
             ( { model | steps = prevSteps, jugs = prevJugs, hint = NoHint, availableSteps = getAvailableSteps prevJugs }, Cmd.none )
 
@@ -98,12 +98,17 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
+    let
+        noStepsMade : Bool
+        noStepsMade =
+            model.steps == emptySteps
+    in
     div []
         [ h1 []
             [ text "measure 4 gallons exactly"
-            , button [ disabled (List.isEmpty model.steps), onClick ClickedReset ] [ text "start over" ]
+            , button [ disabled noStepsMade, onClick ClickedReset ] [ text "start over" ]
             , button [ onClick ClickedGetHint ] [ text "Get Hint" ]
-            , button [ disabled (List.isEmpty model.steps), onClick ClickedUndo ] [ text "undo last move" ]
+            , button [ disabled noStepsMade, onClick ClickedUndo ] [ text "undo last move" ]
             ]
         , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model
@@ -136,14 +141,14 @@ viewPourButton source target { hint, availableSteps } description =
     div [] [ button [ disabled (isDisabled (Pour source target) availableSteps), classList [ ( "hint", showHint ) ], onClick (Action (Pour source target)) ] [ text description ] ]
 
 
-isDisabled : Step -> Steps -> Bool
+isDisabled : Step -> List Step -> Bool
 isDisabled step availableSteps =
     not (List.member step availableSteps)
 
 
 viewSteps : Steps -> Html Msg
 viewSteps steps =
-    div [] [ ol [] (List.map viewStep steps) ]
+    div [] [ ol [] (stepMap viewStep steps) ]
 
 
 viewStep : Step -> Html Msg

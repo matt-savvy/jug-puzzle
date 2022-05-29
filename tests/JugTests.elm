@@ -115,7 +115,7 @@ isSolvedTest =
         ]
 
 
-getAvailableStepTest : Int -> Int -> Steps -> Test
+getAvailableStepTest : Int -> Int -> List Step -> Test
 getAvailableStepTest amountGallon3 amountGallon5 expectedSteps =
     let
         description : String
