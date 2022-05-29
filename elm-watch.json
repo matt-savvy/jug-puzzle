@@ -2,7 +2,7 @@
     "targets": {
         "Jugs": {
             "inputs": [
-                "src/Jugs.elm"
+                "src/JugPuzzle.elm"
             ],
             "output": "app.js"
         }
