@@ -12,9 +12,10 @@ button {
     display: flex;
 }
 
-.jug {
+.jug-container {
     margin: 0 100px;
 }
+
 
 #game-buttons {
     display: flex;

@@ -234,7 +234,7 @@ viewTime { startTime, currentTime } =
 
 viewJug : Jug -> String -> Model -> Bool -> Html Msg
 viewJug jug jugLabel { jugs, hint, availableSteps } solved =
-    div [ class "jug" ]
+    div [ class "jug-container" ]
         [ h2 [] [ text (jugLabel ++ ": " ++ String.fromInt (getJug jug jugs)) ]
         , button [ disabled (solved || isNoOp (Fill jug) availableSteps), classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
         , button [ disabled (solved || isNoOp (Empty jug) availableSteps), classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Action (Empty jug)) ] [ text "empty" ]
