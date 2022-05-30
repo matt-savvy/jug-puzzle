@@ -120,7 +120,7 @@ view model =
         , div [ id "game-buttons" ]
             [ button [ disabled (noStepsMade), onClick ClickedReset ] [ text "start over" ]
             , button [ disabled solved, onClick ClickedGetHint ] [ text "get hint" ]
-            , button [ disabled (solved || noStepsMade), onClick ClickedUndo ] [ text "undo last move" ]
+            , button [ disabled (solved || noStepsMade), onClick ClickedUndo ] [ text "undo" ]
             ]
         , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model solved
