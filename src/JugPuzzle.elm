@@ -86,7 +86,7 @@ type Msg
 
 timeLimit : Int
 timeLimit =
-    15 * 1000
+    60 * 1000
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -100,8 +100,22 @@ update msg model =
             in
             ( { model | deadline = Just deadline }, Cmd.none )
 
-        GotCurrentTime time ->
-            ( { model | currentTime = Just time }, Cmd.none )
+        GotCurrentTime currentTime ->
+            case ( model.gameStatus, model.deadline ) of
+                ( Active, Just deadline ) ->
+                    let
+                        nextGameStatus : Status
+                        nextGameStatus =
+                            if getTimeDelta deadline currentTime < 0 then
+                                GameOver
+
+                            else
+                                model.gameStatus
+                    in
+                    ( { model | currentTime = Just currentTime, gameStatus = nextGameStatus }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
         ClickedGetHint ->
             ( { model | hint = getHint model.jugs }, Cmd.none )
@@ -208,7 +222,7 @@ view model =
 
 getTimeDelta : Posix -> Posix -> Int
 getTimeDelta timeA timeB =
-    abs (posixToMillis timeA - posixToMillis timeB)
+    posixToMillis timeA - posixToMillis timeB
 
 
 getMinutesSeconds : Int -> ( Int, Int )
