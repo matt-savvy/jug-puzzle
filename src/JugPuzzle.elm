@@ -123,23 +123,23 @@ view model =
             , button [ disabled noStepsMade, onClick ClickedUndo ] [ text "undo last move" ]
             ]
         , div [ id "jugs" ]
-            [ viewJug Gallon3 "3 gallon jug" model
+            [ viewJug Gallon3 "3 gallon jug" model solved
             , div [ id "pour-buttons" ]
                 [ viewPourButton Gallon3 Gallon5 model " >> "
                 , viewPourButton Gallon5 Gallon3 model " << "
                 ]
-            , viewJug Gallon5 "5 gallon jug" model
+            , viewJug Gallon5 "5 gallon jug" model solved
             ]
         , viewSteps model.steps
         ]
 
 
-viewJug : Jug -> String -> Model -> Html Msg
-viewJug jug jugLabel { jugs, hint, availableSteps } =
+viewJug : Jug -> String -> Model -> Bool -> Html Msg
+viewJug jug jugLabel { jugs, hint, availableSteps } solved =
     div [ class "jug" ]
         [ h2 [] [ text (jugLabel ++ ": " ++ String.fromInt (getJug jug jugs)) ]
-        , button [ disabled (isNoOp (Fill jug) availableSteps), classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
-        , button [ disabled (isNoOp (Empty jug) availableSteps), classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Action (Empty jug)) ] [ text "empty" ]
+        , button [ disabled (solved || isNoOp (Fill jug) availableSteps), classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
+        , button [ disabled (solved || isNoOp (Empty jug) availableSteps), classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Action (Empty jug)) ] [ text "empty" ]
         ]
 
 
