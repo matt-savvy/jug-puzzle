@@ -18,7 +18,7 @@ main =
     Browser.element
         { init = init
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         , view = view
         }
 
@@ -55,7 +55,12 @@ initialModel =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( initialModel, Task.perform GotStartTime Time.now )
+    ( initialModel
+    , Cmd.batch
+        [ Task.perform GotStartTime Time.now
+        , Task.perform GotFinishTime Time.now
+        ]
+    )
 
 
 
@@ -117,6 +122,19 @@ update msg model =
 
         ClickedReset ->
             init ()
+
+
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions { jugs } =
+    if isSolved jugs then
+        Sub.none
+
+    else
+        Time.every 1000 GotFinishTime
 
 
 
