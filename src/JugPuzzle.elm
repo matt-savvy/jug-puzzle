@@ -16,7 +16,7 @@ import Time exposing (Posix)
 main : Program () Model Msg
 main =
     Browser.element
-        { init = \_ -> ( initialModel, Task.perform GotStartTime Time.now )
+        { init = init
         , update = update
         , subscriptions = \_ -> Sub.none
         , view = view
@@ -51,6 +51,11 @@ initialModel =
     , startTime = Nothing
     , finishTime = Nothing
     }
+
+
+init : () -> ( Model, Cmd Msg )
+init _ =
+    ( initialModel, Task.perform GotStartTime Time.now )
 
 
 
@@ -111,7 +116,7 @@ update msg model =
             ( { model | steps = prevSteps, jugs = prevJugs, hint = NoHint, availableSteps = getAvailableSteps prevJugs }, Cmd.none )
 
         ClickedReset ->
-            ( initialModel, Cmd.none )
+            init ()
 
 
 
