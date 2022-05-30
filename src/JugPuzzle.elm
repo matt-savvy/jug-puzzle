@@ -5,6 +5,8 @@ import Html exposing (Html, button, div, h1, h2, li, ol, text)
 import Html.Attributes exposing (class, classList, disabled, id)
 import Html.Events exposing (onClick)
 import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps(..), applyStep, applySteps, createJugs, dropLastStep, emptySteps, getAvailableSteps, getHint, getJug, isSolved, pushStep, stepMap, stepMember)
+import Task
+import Time exposing (Posix)
 
 
 
@@ -14,7 +16,7 @@ import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps(..), applyStep, a
 main : Program () Model Msg
 main =
     Browser.element
-        { init = \_ -> ( initialModel, Cmd.none )
+        { init = \_ -> ( initialModel, Task.perform GotStartTime Time.now )
         , update = update
         , subscriptions = \_ -> Sub.none
         , view = view
@@ -30,6 +32,8 @@ type alias Model =
     , steps : Steps
     , hint : Hint
     , availableSteps : List Step
+    , startTime : Maybe Posix
+    , finishTime : Maybe Posix
     }
 
 
@@ -44,6 +48,8 @@ initialModel =
     , steps = emptySteps
     , hint = NoHint
     , availableSteps = getAvailableSteps emptyJugs
+    , startTime = Nothing
+    , finishTime = Nothing
     }
 
 
@@ -56,11 +62,19 @@ type Msg
     | ClickedGetHint
     | ClickedUndo
     | ClickedReset
+    | GotStartTime Posix
+    | GotFinishTime Posix
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        GotStartTime time ->
+            ( { model | startTime = Just time }, Cmd.none )
+
+        GotFinishTime time ->
+            ( { model | finishTime = Just time }, Cmd.none )
+
         ClickedGetHint ->
             ( { model | hint = getHint model.jugs }, Cmd.none )
 
@@ -69,12 +83,20 @@ update msg model =
                 nextJugs : Jugs
                 nextJugs =
                     applyStep step model.jugs
+
+                cmd : Cmd Msg
+                cmd =
+                    if isSolved nextJugs then
+                        Task.perform GotFinishTime Time.now
+
+                    else
+                        Cmd.none
             in
             if nextJugs == model.jugs then
-                ( model, Cmd.none )
+                ( model, cmd )
 
             else
-                ( { model | steps = pushStep model.steps step, jugs = nextJugs, hint = NoHint, availableSteps = getAvailableSteps nextJugs }, Cmd.none )
+                ( { model | steps = pushStep model.steps step, jugs = nextJugs, hint = NoHint, availableSteps = getAvailableSteps nextJugs }, cmd )
 
         ClickedUndo ->
             let
