@@ -27,6 +27,12 @@ main =
 -- MODEL
 
 
+type Status
+    = Active
+    | Solved
+    | GameOver
+
+
 type alias Model =
     { jugs : Jugs
     , steps : Steps
@@ -34,6 +40,7 @@ type alias Model =
     , availableSteps : List Step
     , startTime : Maybe Posix
     , currentTime : Maybe Posix
+    , gameStatus : Status
     }
 
 
@@ -50,6 +57,7 @@ initialModel =
     , availableSteps = getAvailableSteps emptyJugs
     , startTime = Nothing
     , currentTime = Nothing
+    , gameStatus = Active
     }
 
 
@@ -94,19 +102,19 @@ update msg model =
                 nextJugs =
                     applyStep step model.jugs
 
-                cmd : Cmd Msg
-                cmd =
+                nextGameStatus : Status
+                nextGameStatus =
                     if isSolved nextJugs then
-                        Task.perform GotCurrentTime Time.now
+                        Solved
 
                     else
-                        Cmd.none
+                        model.gameStatus
             in
             if nextJugs == model.jugs then
-                ( model, cmd )
+                ( model, Cmd.none )
 
             else
-                ( { model | steps = pushStep model.steps step, jugs = nextJugs, hint = NoHint, availableSteps = getAvailableSteps nextJugs }, cmd )
+                ( { model | steps = pushStep model.steps step, jugs = nextJugs, hint = NoHint, availableSteps = getAvailableSteps nextJugs, gameStatus = nextGameStatus }, Cmd.none )
 
         ClickedUndo ->
             let
@@ -148,33 +156,37 @@ view model =
         noStepsMade =
             model.steps == emptySteps
 
-        solved : Bool
-        solved =
-            isSolved model.jugs
+        notActive : Bool
+        notActive =
+            model.gameStatus /= Active
 
         message : String
         message =
-            if solved then
-                "You did it!"
+            case model.gameStatus of
+                Solved ->
+                    "You did it!"
 
-            else
-                "Fill one of the jugs with exactly four gallons of water"
+                Active ->
+                    "Fill one of the jugs with exactly four gallons of water"
+
+                GameOver ->
+                    "You died, game over"
     in
     div []
         [ div [ id "time-container" ] [ viewTime model ]
         , h1 [] [ text message ]
         , div [ id "game-buttons" ]
-            [ button [ disabled noStepsMade, onClick ClickedReset ] [ text "reset" ]
-            , button [ disabled solved, onClick ClickedGetHint ] [ text "get hint" ]
-            , button [ disabled (solved || noStepsMade), onClick ClickedUndo ] [ text "undo" ]
+            [ button [ disabled (noStepsMade && model.gameStatus == Active), onClick ClickedReset ] [ text "reset" ]
+            , button [ disabled notActive, onClick ClickedGetHint ] [ text "get hint" ]
+            , button [ disabled (notActive || noStepsMade), onClick ClickedUndo ] [ text "undo" ]
             ]
         , div [ id "jugs" ]
-            [ viewJug Gallon3 "3 gallon jug" model solved
+            [ viewJug Gallon3 "3 gallon jug" model notActive
             , div [ id "pour-buttons" ]
-                [ viewPourButton Gallon3 Gallon5 model solved " >> "
-                , viewPourButton Gallon5 Gallon3 model solved " << "
+                [ viewPourButton Gallon3 Gallon5 model notActive " >> "
+                , viewPourButton Gallon5 Gallon3 model notActive " << "
                 ]
-            , viewJug Gallon5 "5 gallon jug" model solved
+            , viewJug Gallon5 "5 gallon jug" model notActive
             ]
         , viewSteps model.steps
         ]
@@ -257,25 +269,25 @@ getFill jug jugs =
 
 
 viewJug : Jug -> String -> Model -> Bool -> Html Msg
-viewJug jug jugLabel { jugs, hint, availableSteps } solved =
+viewJug jug jugLabel { jugs, hint, availableSteps } notActive =
     div [ class "jug-container" ]
-        [ h2 [] [ text (jugLabel) ]
+        [ h2 [] [ text jugLabel ]
         , div [ class "jug-inner" ]
             [ div [ class "jug", id (getId jug), style "background" (getFill jug jugs) ] []
-            , button [ disabled (solved || isNoOp (Fill jug) availableSteps), classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
-            , button [ disabled (solved || isNoOp (Empty jug) availableSteps), classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Action (Empty jug)) ] [ text "empty" ]
+            , button [ disabled (notActive || isNoOp (Fill jug) availableSteps), classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
+            , button [ disabled (notActive || isNoOp (Empty jug) availableSteps), classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Action (Empty jug)) ] [ text "empty" ]
             ]
         ]
 
 
 viewPourButton : Jug -> Jug -> Model -> Bool -> String -> Html Msg
-viewPourButton source target { hint, availableSteps } solved description =
+viewPourButton source target { hint, availableSteps } notActive description =
     let
         showHint : Bool
         showHint =
             hint == Hint (Pour source target)
     in
-    div [] [ button [ disabled (solved || isNoOp (Pour source target) availableSteps), classList [ ( "hint", showHint ) ], onClick (Action (Pour source target)) ] [ text description ] ]
+    div [] [ button [ disabled (notActive || isNoOp (Pour source target) availableSteps), classList [ ( "hint", showHint ) ], onClick (Action (Pour source target)) ] [ text description ] ]
 
 
 isNoOp : Step -> List Step -> Bool
