@@ -1,12 +1,12 @@
 module JugPuzzle exposing (Model, Msg, main)
 
 import Browser
-import Html exposing (Html, button, div, h1, h2, li, ol, text)
+import Html exposing (Html, button, div, h1, h2, li, ol, span, text)
 import Html.Attributes exposing (class, classList, disabled, id)
 import Html.Events exposing (onClick)
 import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps(..), applyStep, applySteps, createJugs, dropLastStep, emptySteps, getAvailableSteps, getHint, getJug, isSolved, pushStep, stepMap, stepMember)
 import Task
-import Time exposing (Posix)
+import Time exposing (Posix, posixToMillis)
 
 
 
@@ -143,9 +143,9 @@ view model =
                 "Fill one of the jugs with exactly four gallons of water"
     in
     div []
-        [ h1 [] [ text message ]
+        [ h1 [] [ text message, viewTime model ]
         , div [ id "game-buttons" ]
-            [ button [ disabled (noStepsMade), onClick ClickedReset ] [ text "start over" ]
+            [ button [ disabled noStepsMade, onClick ClickedReset ] [ text "start over" ]
             , button [ disabled solved, onClick ClickedGetHint ] [ text "get hint" ]
             , button [ disabled (solved || noStepsMade), onClick ClickedUndo ] [ text "undo" ]
             ]
@@ -159,6 +159,58 @@ view model =
             ]
         , viewSteps model.steps
         ]
+
+
+getTimeDelta : Posix -> Posix -> Int
+getTimeDelta timeA timeB =
+    abs (posixToMillis timeA - posixToMillis timeB)
+
+
+getMinutesSeconds : Int -> ( Int, Int )
+getMinutesSeconds delta =
+    let
+        deltaSeconds : Int
+        deltaSeconds =
+            delta // 1000
+
+        minutes : Int
+        minutes =
+            deltaSeconds // 60
+
+        seconds : Int
+        seconds =
+            modBy 60 deltaSeconds
+    in
+    ( minutes, seconds )
+
+
+humanizeMinutesSeconds : ( Int, Int ) -> String
+humanizeMinutesSeconds ( mins, secs ) =
+    let
+        padZeroes : String -> String
+        padZeroes str =
+            String.padLeft 2 '0' str
+
+        convert : Int -> String
+        convert x =
+            String.fromInt x |> padZeroes
+    in
+    convert mins ++ ":" ++ convert secs
+
+
+viewTime : Model -> Html Msg
+viewTime { startTime, finishTime } =
+    case ( startTime, finishTime ) of
+        ( Just start, Just finish ) ->
+            let
+                elapsedTime : String
+                elapsedTime =
+                    getTimeDelta start finish |> getMinutesSeconds |> humanizeMinutesSeconds
+            in
+            span [ class "elapsed-time" ] [ text elapsedTime ]
+
+        _ ->
+            text ""
 
 
 viewJug : Jug -> String -> Model -> Bool -> Html Msg

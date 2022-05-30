@@ -29,3 +29,9 @@ button.hint {
     background-color: aqua;
     transition: all 1s ease;
 }
+
+.elapsed-time {
+    color: gray;
+    font-family: monospace;
+    float: right;
+}
