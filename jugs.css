@@ -64,9 +64,11 @@ button.hint {
 }
 
 #time-container {
-    display: flex;
-    justify-content: end;
     color: gray;
     font-family: monospace;
+    font-size: 20px;
+    position: absolute;
+    top: 4px;
+    right: 14px;
 }
 

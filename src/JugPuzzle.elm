@@ -161,8 +161,8 @@ view model =
                 "Fill one of the jugs with exactly four gallons of water"
     in
     div []
-        [ h1 [] [ text message ]
-        , div [ id "time-container" ] [ viewTime model ]
+        [ div [ id "time-container" ] [ viewTime model ]
+        , h1 [] [ text message ]
         , div [ id "game-buttons" ]
             [ button [ disabled noStepsMade, onClick ClickedReset ] [ text "reset" ]
             , button [ disabled solved, onClick ClickedGetHint ] [ text "get hint" ]
