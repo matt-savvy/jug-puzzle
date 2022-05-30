@@ -15,6 +15,7 @@ h1 {
 
 #jugs {
     display: flex;
+    justify-content: space-evenly;
 }
 
 .jug-container {
@@ -50,7 +51,7 @@ h1 {
 
 #game-buttons {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 
 #pour-buttons {

@@ -164,7 +164,7 @@ view model =
         [ h1 [] [ text message ]
         , div [ id "time-container" ] [ viewTime model ]
         , div [ id "game-buttons" ]
-            [ button [ disabled noStepsMade, onClick ClickedReset ] [ text "start over" ]
+            [ button [ disabled noStepsMade, onClick ClickedReset ] [ text "reset" ]
             , button [ disabled solved, onClick ClickedGetHint ] [ text "get hint" ]
             , button [ disabled (solved || noStepsMade), onClick ClickedUndo ] [ text "undo" ]
             ]
