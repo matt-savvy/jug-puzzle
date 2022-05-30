@@ -4,6 +4,10 @@ body {
     align-content: center;
 }
 
+#game {
+    width: 100%;
+}
+
 button {
     margin: 4px;
 }

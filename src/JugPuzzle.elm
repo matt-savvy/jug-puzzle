@@ -200,7 +200,7 @@ view model =
                 GameOver ->
                     "You died, game over"
     in
-    div []
+    div [id "game" ]
         [ viewTimer model
         , h1 [] [ text message ]
         , div [ id "game-buttons" ]
