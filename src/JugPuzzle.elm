@@ -2,9 +2,9 @@ module JugPuzzle exposing (Model, Msg, main)
 
 import Browser
 import Html exposing (Html, button, div, h1, h2, li, ol, span, text)
-import Html.Attributes exposing (class, classList, disabled, id)
+import Html.Attributes exposing (class, classList, disabled, id, style)
 import Html.Events exposing (onClick)
-import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps(..), applyStep, applySteps, createJugs, dropLastStep, emptySteps, getAvailableSteps, getHint, getJug, isSolved, pushStep, stepMap, stepMember)
+import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps(..), applyStep, applySteps, createJugs, dropLastStep, emptySteps, getAvailableSteps, getCapacity, getHint, getJug, isSolved, pushStep, stepMap, stepMember)
 import Task
 import Time exposing (Posix, posixToMillis)
 
@@ -232,10 +232,35 @@ viewTime { startTime, currentTime } =
             text ""
 
 
+getId : Jug -> String
+getId jug =
+    case jug of
+        Gallon3 ->
+            "gallon-3"
+
+        Gallon5 ->
+            "gallon-5"
+
+
+getFill : Jug -> Jugs -> String
+getFill jug jugs =
+    let
+        filledPercent : Float
+        filledPercent =
+            100 * toFloat (getJug jug jugs) / toFloat (getCapacity jug)
+
+        filled : String
+        filled =
+            String.fromFloat filledPercent
+    in
+    "linear-gradient(to top, aqua 0% " ++ filled ++ "%, white " ++ filled ++ "%)"
+
+
 viewJug : Jug -> String -> Model -> Bool -> Html Msg
 viewJug jug jugLabel { jugs, hint, availableSteps } solved =
     div [ class "jug-container" ]
         [ h2 [] [ text (jugLabel ++ ": " ++ String.fromInt (getJug jug jugs)) ]
+        , div [ class "jug", id (getId jug), style "background" (getFill jug jugs) ] []
         , button [ disabled (solved || isNoOp (Fill jug) availableSteps), classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
         , button [ disabled (solved || isNoOp (Empty jug) availableSteps), classList [ ( "hint", hint == Hint (Empty jug) ) ], onClick (Action (Empty jug)) ] [ text "empty" ]
         ]

@@ -16,6 +16,21 @@ button {
     margin: 0 100px;
 }
 
+.jug {
+    border: 1px solid gray;
+    border-radius: 20%;
+}
+
+#gallon-3 {
+    height: 125;
+    width: 125;
+}
+
+#gallon-5 {
+    height: 156px;
+    width: 156px;
+}
+
 
 #game-buttons {
     display: flex;
