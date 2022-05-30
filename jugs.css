@@ -68,12 +68,11 @@ button.hint {
 }
 
 #timer {
+    display: flex;
+    justify-content: space-evenly;
     color: gray;
     font-family: monospace;
     font-size: 20px;
-    position: absolute;
-    top: 4px;
-    right: 14px;
 }
 
 #timer.urgent {

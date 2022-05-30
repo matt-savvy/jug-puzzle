@@ -201,13 +201,13 @@ view model =
                     "You died, game over"
     in
     div [id "game" ]
-        [ viewTimer model
-        , h1 [] [ text message ]
-        , div [ id "game-buttons" ]
+        [ div [ id "game-buttons" ]
             [ button [ disabled (noStepsMade && model.gameStatus == Active), onClick ClickedReset ] [ text "reset" ]
             , button [ disabled notActive, onClick ClickedGetHint ] [ text "get hint" ]
             , button [ disabled (notActive || noStepsMade), onClick ClickedUndo ] [ text "undo" ]
             ]
+        , viewTimer model
+        , h1 [] [ text message ]
         , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model notActive
             , div [ id "pour-buttons" ]
