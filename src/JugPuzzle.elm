@@ -118,9 +118,9 @@ view model =
     div []
         [ h1 [] [ text message ]
         , div [ id "game-buttons" ]
-            [ button [ disabled noStepsMade, onClick ClickedReset ] [ text "start over" ]
-            , button [ onClick ClickedGetHint ] [ text "Get Hint" ]
-            , button [ disabled noStepsMade, onClick ClickedUndo ] [ text "undo last move" ]
+            [ button [ disabled (noStepsMade), onClick ClickedReset ] [ text "start over" ]
+            , button [ disabled solved, onClick ClickedGetHint ] [ text "Get Hint" ]
+            , button [ disabled (solved || noStepsMade), onClick ClickedUndo ] [ text "undo last move" ]
             ]
         , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model solved
