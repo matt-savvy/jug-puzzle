@@ -63,12 +63,16 @@ button.hint {
     transition: all 1s ease;
 }
 
-#time-container {
+#timer {
     color: gray;
     font-family: monospace;
     font-size: 20px;
     position: absolute;
     top: 4px;
     right: 14px;
+}
+
+#timer.urgent {
+    color: red;
 }
 

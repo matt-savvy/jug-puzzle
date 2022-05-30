@@ -201,7 +201,7 @@ view model =
                     "You died, game over"
     in
     div []
-        [ div [ id "time-container" ] [ viewTime model ]
+        [ viewTimer model
         , h1 [] [ text message ]
         , div [ id "game-buttons" ]
             [ button [ disabled (noStepsMade && model.gameStatus == Active), onClick ClickedReset ] [ text "reset" ]
@@ -257,16 +257,24 @@ humanizeMinutesSeconds ( mins, secs ) =
     convert mins ++ ":" ++ convert secs
 
 
-viewTime : Model -> Html Msg
-viewTime { deadline, currentTime } =
+viewTimer : Model -> Html Msg
+viewTimer { deadline, currentTime } =
     case ( deadline, currentTime ) of
         ( Just start, Just current ) ->
             let
-                elapsedTime : String
-                elapsedTime =
-                    getTimeDelta start current |> getMinutesSeconds |> humanizeMinutesSeconds
+                timeRemaining : Int
+                timeRemaining =
+                    getTimeDelta start current
+
+                humanizedTime : String
+                humanizedTime =
+                    timeRemaining |> getMinutesSeconds |> humanizeMinutesSeconds
+
+                urgent : Bool
+                urgent =
+                    timeRemaining < (10 * 1000)
             in
-            text elapsedTime
+            div [ id "timer", classList [ ( "urgent", urgent ) ] ] [ text humanizedTime ]
 
         _ ->
             text ""
