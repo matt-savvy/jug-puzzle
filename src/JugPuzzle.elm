@@ -125,8 +125,8 @@ view model =
         , div [ id "jugs" ]
             [ viewJug Gallon3 "3 gallon jug" model solved
             , div [ id "pour-buttons" ]
-                [ viewPourButton Gallon3 Gallon5 model " >> "
-                , viewPourButton Gallon5 Gallon3 model " << "
+                [ viewPourButton Gallon3 Gallon5 model solved " >> "
+                , viewPourButton Gallon5 Gallon3 model solved " << "
                 ]
             , viewJug Gallon5 "5 gallon jug" model solved
             ]
@@ -143,14 +143,14 @@ viewJug jug jugLabel { jugs, hint, availableSteps } solved =
         ]
 
 
-viewPourButton : Jug -> Jug -> Model -> String -> Html Msg
-viewPourButton source target { hint, availableSteps } description =
+viewPourButton : Jug -> Jug -> Model -> Bool -> String -> Html Msg
+viewPourButton source target { hint, availableSteps } solved description =
     let
         showHint : Bool
         showHint =
             hint == Hint (Pour source target)
     in
-    div [] [ button [ disabled (isNoOp (Pour source target) availableSteps), classList [ ( "hint", showHint ) ], onClick (Action (Pour source target)) ] [ text description ] ]
+    div [] [ button [ disabled (solved || isNoOp (Pour source target) availableSteps), classList [ ( "hint", showHint ) ], onClick (Action (Pour source target)) ] [ text description ] ]
 
 
 isNoOp : Step -> List Step -> Bool
