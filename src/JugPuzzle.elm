@@ -143,7 +143,8 @@ view model =
                 "Fill one of the jugs with exactly four gallons of water"
     in
     div []
-        [ h1 [] [ text message, viewTime model ]
+        [ h1 [] [ text message ]
+        , div [ id "time-container" ] [ viewTime model ]
         , div [ id "game-buttons" ]
             [ button [ disabled noStepsMade, onClick ClickedReset ] [ text "start over" ]
             , button [ disabled solved, onClick ClickedGetHint ] [ text "get hint" ]
@@ -207,7 +208,7 @@ viewTime { startTime, finishTime } =
                 elapsedTime =
                     getTimeDelta start finish |> getMinutesSeconds |> humanizeMinutesSeconds
             in
-            span [ class "elapsed-time" ] [ text elapsedTime ]
+            text elapsedTime
 
         _ ->
             text ""

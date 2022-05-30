@@ -30,8 +30,10 @@ button.hint {
     transition: all 1s ease;
 }
 
-.elapsed-time {
+#time-container {
+    display: flex;
+    justify-content: end;
     color: gray;
     font-family: monospace;
-    float: right;
 }
+
