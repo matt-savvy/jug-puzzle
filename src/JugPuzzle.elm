@@ -6,7 +6,7 @@ import Html.Attributes exposing (class, classList, disabled, id, style)
 import Html.Events exposing (onClick)
 import Jugs exposing (Hint(..), Jug(..), Jugs, Step(..), Steps(..), applyStep, applySteps, createJugs, dropLastStep, emptySteps, getAvailableSteps, getCapacity, getHint, getJug, isSolved, pushStep, stepMap, stepMember)
 import Task
-import Time exposing (Posix, posixToMillis)
+import Time exposing (Posix, millisToPosix, posixToMillis)
 
 
 
@@ -38,7 +38,7 @@ type alias Model =
     , steps : Steps
     , hint : Hint
     , availableSteps : List Step
-    , startTime : Maybe Posix
+    , deadline : Maybe Posix
     , currentTime : Maybe Posix
     , gameStatus : Status
     }
@@ -55,7 +55,7 @@ initialModel =
     , steps = emptySteps
     , hint = NoHint
     , availableSteps = getAvailableSteps emptyJugs
-    , startTime = Nothing
+    , deadline = Nothing
     , currentTime = Nothing
     , gameStatus = Active
     }
@@ -65,8 +65,8 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( initialModel
     , Cmd.batch
-        [ Task.perform GotStartTime Time.now
-        , Task.perform GotCurrentTime Time.now
+        [ Task.perform GotCurrentTime Time.now
+        , Task.perform GotStartTime Time.now
         ]
     )
 
@@ -84,11 +84,21 @@ type Msg
     | GotCurrentTime Posix
 
 
+timeLimit : Int
+timeLimit =
+    15 * 1000
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         GotStartTime time ->
-            ( { model | startTime = Just time }, Cmd.none )
+            let
+                deadline : Posix
+                deadline =
+                    millisToPosix (posixToMillis time + timeLimit)
+            in
+            ( { model | deadline = Just deadline }, Cmd.none )
 
         GotCurrentTime time ->
             ( { model | currentTime = Just time }, Cmd.none )
@@ -137,12 +147,16 @@ update msg model =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions { jugs } =
-    if isSolved jugs then
-        Sub.none
+subscriptions { gameStatus } =
+    case gameStatus of
+        Active ->
+            Time.every 1000 GotCurrentTime
 
-    else
-        Time.every 1000 GotCurrentTime
+        GameOver ->
+            Sub.none
+
+        Solved ->
+            Sub.none
 
 
 
@@ -230,8 +244,8 @@ humanizeMinutesSeconds ( mins, secs ) =
 
 
 viewTime : Model -> Html Msg
-viewTime { startTime, currentTime } =
-    case ( startTime, currentTime ) of
+viewTime { deadline, currentTime } =
+    case ( deadline, currentTime ) of
         ( Just start, Just current ) ->
             let
                 elapsedTime : String
