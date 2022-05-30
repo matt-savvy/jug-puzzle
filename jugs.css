@@ -13,7 +13,18 @@ button {
 }
 
 .jug-container {
-    margin: 0 100px;
+    display: flex;
+    width: 180px;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.jug-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
 }
 
 .jug {
