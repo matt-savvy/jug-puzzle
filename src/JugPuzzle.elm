@@ -33,7 +33,7 @@ type alias Model =
     , hint : Hint
     , availableSteps : List Step
     , startTime : Maybe Posix
-    , finishTime : Maybe Posix
+    , currentTime : Maybe Posix
     }
 
 
@@ -49,7 +49,7 @@ initialModel =
     , hint = NoHint
     , availableSteps = getAvailableSteps emptyJugs
     , startTime = Nothing
-    , finishTime = Nothing
+    , currentTime = Nothing
     }
 
 
@@ -58,7 +58,7 @@ init _ =
     ( initialModel
     , Cmd.batch
         [ Task.perform GotStartTime Time.now
-        , Task.perform GotFinishTime Time.now
+        , Task.perform GotCurrentTime Time.now
         ]
     )
 
@@ -73,7 +73,7 @@ type Msg
     | ClickedUndo
     | ClickedReset
     | GotStartTime Posix
-    | GotFinishTime Posix
+    | GotCurrentTime Posix
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -82,8 +82,8 @@ update msg model =
         GotStartTime time ->
             ( { model | startTime = Just time }, Cmd.none )
 
-        GotFinishTime time ->
-            ( { model | finishTime = Just time }, Cmd.none )
+        GotCurrentTime time ->
+            ( { model | currentTime = Just time }, Cmd.none )
 
         ClickedGetHint ->
             ( { model | hint = getHint model.jugs }, Cmd.none )
@@ -97,7 +97,7 @@ update msg model =
                 cmd : Cmd Msg
                 cmd =
                     if isSolved nextJugs then
-                        Task.perform GotFinishTime Time.now
+                        Task.perform GotCurrentTime Time.now
 
                     else
                         Cmd.none
@@ -134,7 +134,7 @@ subscriptions { jugs } =
         Sub.none
 
     else
-        Time.every 1000 GotFinishTime
+        Time.every 1000 GotCurrentTime
 
 
 
@@ -218,13 +218,13 @@ humanizeMinutesSeconds ( mins, secs ) =
 
 
 viewTime : Model -> Html Msg
-viewTime { startTime, finishTime } =
-    case ( startTime, finishTime ) of
-        ( Just start, Just finish ) ->
+viewTime { startTime, currentTime } =
+    case ( startTime, currentTime ) of
+        ( Just start, Just current ) ->
             let
                 elapsedTime : String
                 elapsedTime =
-                    getTimeDelta start finish |> getMinutesSeconds |> humanizeMinutesSeconds
+                    getTimeDelta start current |> getMinutesSeconds |> humanizeMinutesSeconds
             in
             text elapsedTime
 
