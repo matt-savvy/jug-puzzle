@@ -119,7 +119,7 @@ view model =
         [ h1 [] [ text message ]
         , div [ id "game-buttons" ]
             [ button [ disabled (noStepsMade), onClick ClickedReset ] [ text "start over" ]
-            , button [ disabled solved, onClick ClickedGetHint ] [ text "Get Hint" ]
+            , button [ disabled solved, onClick ClickedGetHint ] [ text "get hint" ]
             , button [ disabled (solved || noStepsMade), onClick ClickedUndo ] [ text "undo last move" ]
             ]
         , div [ id "jugs" ]
