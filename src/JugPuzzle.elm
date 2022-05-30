@@ -259,7 +259,7 @@ getFill jug jugs =
 viewJug : Jug -> String -> Model -> Bool -> Html Msg
 viewJug jug jugLabel { jugs, hint, availableSteps } solved =
     div [ class "jug-container" ]
-        [ h2 [] [ text (jugLabel ++ ": " ++ String.fromInt (getJug jug jugs)) ]
+        [ h2 [] [ text (jugLabel) ]
         , div [ class "jug-inner" ]
             [ div [ class "jug", id (getId jug), style "background" (getFill jug jugs) ] []
             , button [ disabled (solved || isNoOp (Fill jug) availableSteps), classList [ ( "hint", hint == Hint (Fill jug) ) ], onClick (Action (Fill jug)) ] [ text "fill" ]
