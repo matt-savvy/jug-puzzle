@@ -4,12 +4,53 @@ body {
     align-content: center;
 }
 
-#game {
-    width: 100%;
-}
-
 button {
     margin: 4px;
+    font-size: 20px;
+    padding: 4px 8px;
+}
+
+@media (min-width: 601px) {
+    button {
+        margin: 4px;
+        font-size: 16px;
+        padding: 4px 8px;
+    }
+
+    #game {
+        width: 60%;
+    }
+
+}
+
+@media (max-width: 600px) {
+    button {
+        margin: 4px;
+        font-size: 20px;
+        padding: 4px 8px;
+    }
+
+    #jugs {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .jug-container {
+        margin-bottom: 24px;
+    }
+
+    #game {
+        width: 90%;
+    }
+
+    #pour-buttons {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .pour-button {
+        transform: rotate(90deg);
+    }
 }
 
 h1 {
@@ -24,13 +65,14 @@ h1 {
 
 .jug-container {
     display: flex;
-    width: 180px;
+    width: 100%;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
 }
 
 .jug-inner {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: end;
@@ -43,8 +85,8 @@ h1 {
 }
 
 #gallon-3 {
-    height: 125;
-    width: 125;
+    height: 125px;
+    width: 125px;
 }
 
 #gallon-5 {
@@ -60,6 +102,13 @@ h1 {
 
 #pour-buttons {
     align-self: center;
+}
+
+.pour-button {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 button.hint {

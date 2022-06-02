@@ -323,7 +323,7 @@ viewPourButton source target { hint, availableSteps } notActive description =
         showHint =
             hint == Hint (Pour source target)
     in
-    div [] [ button [ disabled (notActive || isNoOp (Pour source target) availableSteps), classList [ ( "hint", showHint ) ], onClick (Action (Pour source target)) ] [ text description ] ]
+    div [] [ button [ disabled (notActive || isNoOp (Pour source target) availableSteps), classList [ ( "hint", showHint ), ("pour-button", True) ], onClick (Action (Pour source target)) ] [ text description ] ]
 
 
 isNoOp : Step -> List Step -> Bool
