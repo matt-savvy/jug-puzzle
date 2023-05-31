@@ -9,7 +9,7 @@ npm ci
 
 2. Compile elm
 ```
-node_modules/elm/bin/elm make src/Jugs.elm --output=app.js --optimize
+node_modules/elm/bin/elm make src/JugPuzzle.elm --output=app.js --optimize
 ```
 
 3. View index.html
