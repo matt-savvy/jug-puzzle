@@ -7,14 +7,15 @@ You have two jugs, a three gallon jug and a five gallon jug. Measure out exactly
 npm ci
 ```
 
-2. Compile elm
+2. Compile
 ```
-node_modules/elm/bin/elm make src/JugPuzzle.elm --output=app.js --optimize
+elm make src/JugPuzzle.elm --optimize --output=dist/app.js
+cp index.html jugs.css dist
 ```
 
 3. View index.html
 ```
-open index.html
+open dist/index.html
 ```
 
 Good luck.
