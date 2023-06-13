@@ -10,7 +10,9 @@ npm ci
 2. Compile
 ```
 elm make src/JugPuzzle.elm --optimize --output=dist/app.js
-cp index.html jugs.css dist
+npm run uglify
+sed 's/app.js/app.min.js/' index.html > dist/index.html
+cp jugs.css dist
 ```
 
 3. View index.html
