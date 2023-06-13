@@ -51,6 +51,13 @@ button {
     .pour-button {
         transform: rotate(90deg);
     }
+
+
+    h1 {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+
 }
 
 h1 {
